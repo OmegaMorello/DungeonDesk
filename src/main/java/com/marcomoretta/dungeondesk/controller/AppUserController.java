@@ -39,6 +39,6 @@ public class AppUserController {
         CreateAppUserRequest createAppUserRequest = appUserMapper.fromDto(createAppUserRequestDto);
         AppUser appUser = appUserService.createUser(createAppUserRequest);
         AppUserDto createdAppUserDto = appUserMapper.toDto(appUser);
-        return new ResponseEntity<>(createdAppUserDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdAppUserDto, HttpStatus.CREATED); //TODO: Check warning
     }
 }

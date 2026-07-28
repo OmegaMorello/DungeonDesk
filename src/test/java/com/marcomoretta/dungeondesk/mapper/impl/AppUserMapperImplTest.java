@@ -3,12 +3,9 @@ package com.marcomoretta.dungeondesk.mapper.impl;
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
 import com.marcomoretta.dungeondesk.domain.dto.CreateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
-import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
