@@ -3,6 +3,11 @@ package com.marcomoretta.dungeondesk.domain.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Dto needed to pass AppUser creation or login parameters
+ * @param name the username of the user
+ * @param secret the raw secret which will be hashed before being saved in the db
+ */
 public record CreateAppUserRequestDto(
         @NotBlank(message = ERROR_MESSAGE_NAME_LENGTH)
         @Size(max = 255, message = ERROR_MESSAGE_NAME_LENGTH)

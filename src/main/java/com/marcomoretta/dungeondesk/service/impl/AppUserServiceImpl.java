@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Serves the AppUser controller
+ */
 @Service
 public class AppUserServiceImpl implements AppUserService {
 

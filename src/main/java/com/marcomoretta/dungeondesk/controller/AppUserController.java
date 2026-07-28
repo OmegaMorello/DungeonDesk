@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Class that exposes REST APIs for users management
+ */
 @RestController
 @RequestMapping(path = "/api/v1/appusers")
 public class AppUserController {
@@ -25,6 +28,10 @@ public class AppUserController {
         this.appUserMapper = appUserMapper;
     }
 
+    /**
+     * Gets the complete users list
+     * @return users list dto
+     */
     @GetMapping("/all")
     public ResponseEntity<List<AppUserDto>> listUsers() {
         List<AppUser> appUserList = appUserService.getAllUsers();
@@ -32,6 +39,11 @@ public class AppUserController {
         return ResponseEntity.ok(appUserDtos);
     }
 
+    /**
+     * Creates a new user
+     * @param createAppUserRequestDto the dto container with name and secret
+     * @return a response 201 CREATED if the user is correctly created
+     */
     @PostMapping("/create")
     public ResponseEntity<AppUserDto> createUser(
             @Valid @RequestBody CreateAppUserRequestDto createAppUserRequestDto

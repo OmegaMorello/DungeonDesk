@@ -9,8 +9,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Mapper for the AppUser to and from Dto
+ */
 @Component
 public class AppUserMapperImpl implements AppUserMapper {
+
     @Override
     public CreateAppUserRequest fromDto(CreateAppUserRequestDto dto) {
         return new CreateAppUserRequest(
@@ -18,6 +22,7 @@ public class AppUserMapperImpl implements AppUserMapper {
                 dto.secret()
         );
     }
+
 
     @Override
     public AppUserDto toDto(AppUser appUser) {
@@ -27,6 +32,7 @@ public class AppUserMapperImpl implements AppUserMapper {
                 appUser.getCampaignList()
         );
     }
+
 
     @Override
     public List<AppUserDto> toDtoList(List<AppUser> appUserList) {
