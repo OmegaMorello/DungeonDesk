@@ -1,3 +1,13 @@
 spring:
   application:
     name: dungeondesk
+  datasource:
+    url: jdbc:h2:file:./data/dungeondesk;AUTO_SERVER=TRUE
+    username: sa
+    password: dungeondesk
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
