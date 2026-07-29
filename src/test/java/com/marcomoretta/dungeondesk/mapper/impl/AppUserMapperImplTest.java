@@ -1,7 +1,7 @@
 package com.marcomoretta.dungeondesk.mapper.impl;
 
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
-import com.marcomoretta.dungeondesk.domain.dto.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,10 @@ class AppUserMapperImplTest {
                 new CreateAppUserRequestDto(
                         "Test", "Secret");
         // Act
-        CreateAppUserRequest createAppUserRequest = appUserMapper.fromDto(createAppUserRequestDto);
+        CreateAppUserRequest createAppUserRequest = appUserMapper.fromCreateDto(createAppUserRequestDto);
 
         // Assert
-        assertEquals(createAppUserRequestDto.name(), createAppUserRequest.name());
+        assertEquals(createAppUserRequestDto.username(), createAppUserRequest.username());
         assertEquals(createAppUserRequestDto.secret(),createAppUserRequest.secret());
 
     }
@@ -43,9 +43,7 @@ class AppUserMapperImplTest {
 
         // Assert
         assertEquals(10L, appUserDto.id());
-        assertEquals(appUser.getUsername(), appUserDto.name());
-        assertNotNull(appUserDto.campaignList());
-        assertTrue(appUserDto.campaignList().isEmpty());
+        assertEquals(appUser.getUsername(), appUserDto.username());
 
     }
 
@@ -70,8 +68,8 @@ class AppUserMapperImplTest {
 
         // Assert
         assertEquals(2, appUserDtos.size());
-        assertEquals(appUser1.getUsername(), appUserDtos.getFirst().name());
-        assertEquals(appUser2.getUsername(), appUserDtos.getLast().name());
+        assertEquals(appUser1.getUsername(), appUserDtos.getFirst().username());
+        assertEquals(appUser2.getUsername(), appUserDtos.getLast().username());
     }
 
     @Test

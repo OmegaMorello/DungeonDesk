@@ -1,10 +1,12 @@
 package com.marcomoretta.dungeondesk.mapper.impl;
 
-import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
-import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
-import com.marcomoretta.dungeondesk.domain.dto.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.UpdateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
+import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,11 +18,17 @@ import java.util.List;
 public class AppUserMapperImpl implements AppUserMapper {
 
     @Override
-    public CreateAppUserRequest fromDto(CreateAppUserRequestDto dto) {
+    public CreateAppUserRequest fromCreateDto(CreateAppUserRequestDto dto) {
         return new CreateAppUserRequest(
-                dto.name(),
+                dto.username(),
                 dto.secret()
         );
+    }
+
+    //TODO: Implement update user request
+    @Override
+    public UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto) {
+        return null;
     }
 
 
@@ -28,8 +36,7 @@ public class AppUserMapperImpl implements AppUserMapper {
     public AppUserDto toDto(AppUser appUser) {
         return new AppUserDto(
                 appUser.getUserId(),
-                appUser.getUsername(),
-                appUser.getCampaignList()
+                appUser.getUsername()
         );
     }
 

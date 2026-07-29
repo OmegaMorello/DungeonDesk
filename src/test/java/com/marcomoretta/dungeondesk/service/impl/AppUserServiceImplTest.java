@@ -59,7 +59,7 @@ class AppUserServiceImplTest {
         assertEquals(firstUser.getUsername(), appUserList.getFirst().getUsername());
         assertEquals(secondUser.getUsername(), appUserList.getLast().getUsername());
         verify(appUserRepository).findAll(sortCaptor.capture());
-        assertEquals(Sort.by(Sort.Direction.ASC, "username"), sortCaptor.getValue());
+        assertEquals(Sort.by(Sort.Direction.ASC, "name"), sortCaptor.getValue());
     }
 
     @Test

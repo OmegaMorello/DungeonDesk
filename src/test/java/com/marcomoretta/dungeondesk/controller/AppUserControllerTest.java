@@ -1,7 +1,7 @@
 package com.marcomoretta.dungeondesk.controller;
 
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
-import com.marcomoretta.dungeondesk.domain.dto.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
@@ -52,12 +52,10 @@ class AppUserControllerTest {
 
         AppUserDto appUserDto1 = new AppUserDto(
                 appUser1.getUserId(),
-                appUser1.getUsername(),
-                null);
+                appUser1.getUsername());
         AppUserDto appUserDto2 = new AppUserDto(
                 appUser2.getUserId(),
-                appUser2.getUsername(),
-                null);
+                appUser2.getUsername());
 
         List<AppUser> appUserList = List.of(appUser1, appUser2);
         List<AppUserDto> appUserDtos = List.of(appUserDto1, appUserDto2);
@@ -87,10 +85,10 @@ class AppUserControllerTest {
                 .username("Test")
                 .hashSecret("fake-hash")
                 .build();
-        AppUserDto appUserDto = new AppUserDto(1L, "Test", List.of());
+        AppUserDto appUserDto = new AppUserDto(1L, "Test");
 
         // Stubs to simulate the process
-        when(appUserMapper.fromDto(dto)).thenReturn(request);
+        when(appUserMapper.fromCreateDto(dto)).thenReturn(request);
         when(appUserService.createUser(request)).thenReturn(appUser);
         when(appUserMapper.toDto(appUser)).thenReturn(appUserDto);
 

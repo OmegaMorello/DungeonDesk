@@ -1,8 +1,9 @@
 package com.marcomoretta.dungeondesk.service.impl;
 
 import com.marcomoretta.dungeondesk.auth.SecretHasher;
-import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 import com.marcomoretta.dungeondesk.repository.AppUserRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
 import org.springframework.data.domain.Sort;
@@ -29,7 +30,7 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUser createUser(CreateAppUserRequest request) {
 
         AppUser user = AppUser.builder()
-                .username(request.name())
+                .username(request.username())
                 .hashSecret(secretHasher.hash(request.secret()))
                 .build();
 
@@ -39,5 +40,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll(BY_USERNAME_ASC);
+    }
+
+    //TODO: Implement update user method
+    @Override
+    public AppUser updateUser(UpdateAppUserRequest request) {
+        return null;
     }
 }

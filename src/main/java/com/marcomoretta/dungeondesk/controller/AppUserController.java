@@ -1,10 +1,10 @@
 package com.marcomoretta.dungeondesk.controller;
 
-import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
-import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
-import com.marcomoretta.dungeondesk.domain.dto.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
 import com.marcomoretta.dungeondesk.service.AppUserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -48,7 +48,7 @@ public class AppUserController {
     public ResponseEntity<AppUserDto> createUser(
             @Valid @RequestBody CreateAppUserRequestDto createAppUserRequestDto
     ) {
-        CreateAppUserRequest createAppUserRequest = appUserMapper.fromDto(createAppUserRequestDto);
+        CreateAppUserRequest createAppUserRequest = appUserMapper.fromCreateDto(createAppUserRequestDto);
         AppUser appUser = appUserService.createUser(createAppUserRequest);
         AppUserDto createdAppUserDto = appUserMapper.toDto(appUser);
         return new ResponseEntity<>(createdAppUserDto, HttpStatus.CREATED); //TODO: Check warning

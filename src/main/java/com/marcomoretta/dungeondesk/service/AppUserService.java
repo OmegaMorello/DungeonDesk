@@ -1,10 +1,14 @@
 package com.marcomoretta.dungeondesk.service;
 
-import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 
 import java.util.List;
 
+/**
+ * Interface that defines the App User Service
+ */
 public interface AppUserService {
     /**
      * Creates a new user
@@ -18,4 +22,11 @@ public interface AppUserService {
      * @return a list containing all the non-sensitive users information
      */
     List<AppUser> getAllUsers();
+
+    /**
+     * Updates a User
+     * @param request Update Request
+     * @return The updated user non-sensitive information
+     */
+    AppUser updateUser(UpdateAppUserRequest request);
 }
