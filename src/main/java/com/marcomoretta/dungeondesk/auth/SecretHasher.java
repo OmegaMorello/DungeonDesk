@@ -1,5 +1,8 @@
 package com.marcomoretta.dungeondesk.auth;
 
+/**
+ * Interface that defines how a hasher should be implemented
+ */
 public interface SecretHasher {
     /**
      * Hashes the secret with the BCrypt encoder
