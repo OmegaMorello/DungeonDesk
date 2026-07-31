@@ -3,7 +3,6 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.Instant;
 
@@ -43,7 +42,4 @@ public class GameSession {
     private Instant startDate;
 
     private Instant endDate;
-
-    @Length(max = 1000)
-    private String notes;
 }
