@@ -1,10 +1,12 @@
 package com.marcomoretta.dungeondesk.mapper;
 
 import com.marcomoretta.dungeondesk.domain.dto.CampaignDto;
+import com.marcomoretta.dungeondesk.domain.dto.PlayerDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.UpdateCampaignRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.Campaign;
+import com.marcomoretta.dungeondesk.domain.entity.Player;
 import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
@@ -51,4 +53,17 @@ public interface CampaignMapper {
      */
     List<CampaignDto> toDtoList(List<Campaign> campaignList);
 
+    /**
+     * Maps a player to a dto
+     * @param player service layer player
+     * @return presentation layer player dto
+     */
+    PlayerDto toPlayerDto(Player player);
+
+    /**
+     * Maps a player list to a dto
+     * @param playerList service layer player list
+     * @return presentation layer player dto list
+     */
+    List<PlayerDto> toPlayerDtoList(List<Player> playerList);
 }
