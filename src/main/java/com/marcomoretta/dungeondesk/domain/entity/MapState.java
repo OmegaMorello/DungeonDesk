@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Map State: saves the actual state of the used map
@@ -26,6 +29,7 @@ public class MapState {
 
     @Column(nullable = false)
     @Min(1)
+    @Builder.Default
     private int gridRows = 1;
 
     @Column(nullable = false)
@@ -36,9 +40,28 @@ public class MapState {
     @Builder.Default
     private String backgroundUrl = "";
 
-    //TODO: implement CharToken
-//    @OneToMany(mappedBy = "char_token")
-//    @ToString.Exclude
-//    @Builder.Default
-//    private List<CharToken> charTokenList = new ArrayList<>();
+    @OneToMany(mappedBy = "map_state")
+    @ToString.Exclude
+    @Builder.Default
+    private List<Token> tokenList = new ArrayList<>();
+
+    /**
+     * Method to add a token to the map
+     *
+     * @param token The token instance to add
+     */
+    public void addToken(Token token) {
+        tokenList.add(token);
+        token.setMapState(this);
+    }
+
+    /**
+     * Method to remove a token from the map
+     *
+     * @param token The token instance to remove
+     */
+    public void removeToken(Token token) {
+        tokenList.remove(token);
+        token.setMapState(null);
+    }
 }
