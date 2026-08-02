@@ -3,6 +3,7 @@ package com.marcomoretta.dungeondesk.service.impl;
 import com.marcomoretta.dungeondesk.auth.SecretHasher;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.exception.DuplicateUsernameException;
 import com.marcomoretta.dungeondesk.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -76,7 +77,7 @@ class AppUserServiceImplTest {
     }
 
     @Test
-    void createUser() {
+    void createUser() throws DuplicateUsernameException {
         // Arrange
         String username = "test_user";
         String secret = "test_secret";

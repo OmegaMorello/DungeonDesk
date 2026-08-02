@@ -12,19 +12,30 @@ import java.util.List;
 public interface AppUserService {
     /**
      * Creates a new user
-     * @param request the request with the body to create a new user
-     * @return the newly created AppUser or an error which will be raised by the controller
+     *
+     * @param request Request with the body to create a new user
+     * @return Newly created AppUser or an error which will be raised by the controller
      */
     AppUser createUser(CreateAppUserRequest request);
 
     /**
+     * Gets an AppUser by its id
+     *
+     * @param userId The id of the requested user
+     * @return The complete AppUser object
+     */
+    AppUser getUser(Long userId);
+
+    /**
      * Gets the list of all users
-     * @return a list containing all the non-sensitive users information
+     *
+     * @return List containing all the non-sensitive users information
      */
     List<AppUser> getAllUsers();
 
     /**
      * Updates a User
+     *
      * @param request Update Request
      * @return The updated user non-sensitive information
      */
