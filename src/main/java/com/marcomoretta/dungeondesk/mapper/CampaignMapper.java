@@ -23,7 +23,7 @@ public interface CampaignMapper {
      * @param dto presentation layer request dto
      * @return the service layer request
      */
-    CreateCampaignRequest fromCreateDto(CreateCampaignRequestDto dto);
+    CreateCampaignRequest fromCreateDto(CreateCampaignRequestDto dto, Long ownerId);
 
     /**
      * Maps a campaign update request from a dto

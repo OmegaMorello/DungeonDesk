@@ -21,4 +21,10 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     @Override
     @EntityGraph(attributePaths = {"players", "owner"})
     Optional<Campaign> findById(Long id);
+
+
+    boolean existsByNameAndOwner_UserId(String name, Long userId);
+
+    @EntityGraph(attributePaths = {"players", "owner"})
+    List<Campaign> findByOwner_UserId(Long ownerId);
 }

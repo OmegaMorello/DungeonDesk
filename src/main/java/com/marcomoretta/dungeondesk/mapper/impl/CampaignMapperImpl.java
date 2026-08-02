@@ -18,10 +18,10 @@ import java.util.List;
 @Component
 public class CampaignMapperImpl implements CampaignMapper {
     @Override
-    public CreateCampaignRequest fromCreateDto(CreateCampaignRequestDto dto) {
+    public CreateCampaignRequest fromCreateDto(CreateCampaignRequestDto dto, Long ownerId) {
         return new CreateCampaignRequest(
                 dto.name(),
-                dto.ownerId(),
+                ownerId,
                 dto.description()
         );
     }
