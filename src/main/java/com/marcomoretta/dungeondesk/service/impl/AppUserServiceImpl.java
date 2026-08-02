@@ -1,12 +1,16 @@
 package com.marcomoretta.dungeondesk.service.impl;
 
 import com.marcomoretta.dungeondesk.auth.SecretHasher;
-import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
+import com.marcomoretta.dungeondesk.exception.AppUserNotFoundException;
+import com.marcomoretta.dungeondesk.exception.DuplicateUsernameException;
 import com.marcomoretta.dungeondesk.repository.AppUserRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,10 +30,13 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    @Transactional
     public AppUser createUser(CreateAppUserRequest request) {
 
+        checkDuplicate(request.username());
+
         AppUser user = AppUser.builder()
-                .username(request.name())
+                .username(request.username())
                 .hashSecret(secretHasher.hash(request.secret()))
                 .build();
 
@@ -37,7 +44,37 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public AppUser getUser(Long userId) {
+        return appUserRepository
+                .findById(userId)
+                .orElseThrow(() -> new AppUserNotFoundException("User not found: " + userId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll(BY_USERNAME_ASC);
+    }
+
+    @Override
+    @Transactional
+    public AppUser updateUser(UpdateAppUserRequest request) {
+
+        AppUser user = getUser(request.id());
+
+        // Checks duplicate only if the name is changing
+        if (!user.getUsername().equals(request.username()))
+            checkDuplicate(request.username());
+
+        user.setUsername(request.username());
+        user.setHashSecret(secretHasher.hash(request.secret()));
+
+        return appUserRepository.save(user);
+    }
+
+    private void checkDuplicate(String username) {
+        if (appUserRepository.existsByUsername(username))
+            throw new DuplicateUsernameException("Username is already taken, please choose a different one");
     }
 }

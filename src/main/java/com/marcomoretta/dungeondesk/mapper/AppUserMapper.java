@@ -1,9 +1,11 @@
 package com.marcomoretta.dungeondesk.mapper;
 
-import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
-import com.marcomoretta.dungeondesk.domain.dto.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.UpdateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 
 import java.util.List;
 
@@ -17,7 +19,14 @@ public interface AppUserMapper {
      * @param dto presentation layer request dto
      * @return the service layer request
      */
-    CreateAppUserRequest fromDto(CreateAppUserRequestDto dto);
+    CreateAppUserRequest fromCreateDto(CreateAppUserRequestDto dto);
+
+    /**
+     * Maps a user update request from a dto
+     * @param dto presentation layer request dto
+     * @return the service layer request
+     */
+    UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto);
 
     /**
      * Maps a user to a dto

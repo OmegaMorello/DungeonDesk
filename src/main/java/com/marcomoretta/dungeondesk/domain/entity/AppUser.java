@@ -3,9 +3,6 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Application User: usually the dungeon Master who owns 1 or more campaigns
  */
@@ -31,10 +28,5 @@ public class AppUser {
 
     @Column(nullable = false)
     private String hashSecret;
-
-    @OneToMany(mappedBy = "owner")
-    @ToString.Exclude
-    @Builder.Default // Tells builder to do new ArrayList<>() by default when building
-    private List<Campaign> campaignList = new ArrayList<>();
 
 }

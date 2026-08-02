@@ -2,13 +2,18 @@ package com.marcomoretta.dungeondesk.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Campaign: contains basic details, the owner and a description
+ * Campaign: contains basic details, the ownerId,  a description, the players list
+ * Offers methods to add or remove players
  */
 @Entity
-@Table(name = "campaign")
+@Table(name = "campaign", uniqueConstraints = @UniqueConstraint(
+        name = "uk_user_campaign",
+        columnNames = {"campaign_id", "name"}))
 @Getter
 @Setter
 @ToString
@@ -27,17 +32,35 @@ public class Campaign {
     @Column(nullable = false, unique = true)
     private String name;
 
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY) //
     @JoinColumn(name = "owner_id")
     @ToString.Exclude
     private AppUser owner;
 
-    /**
-     * Session code will not be hashed, it is used by players to connect to a session.
-     * Dungeon Master can change it anytime.
-     */
-    @Column(nullable = false)
-    private String sessionCode;
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @Builder.Default
+    private List<Player> players = new ArrayList<>();
 
-    private String description;
+    /**
+     * Method to add a player to the campaign list
+     *
+     * @param player The player instance to add
+     */
+    public void addPlayer(Player player) {
+        players.add(player);
+        player.setCampaign(this);
+    }
+
+    /**
+     * Method to remove a player from the campaign list
+     *
+     * @param player The player instance to remove
+     */
+    public void removePlayer(Player player) {
+        players.remove(player);
+        player.setCampaign(null);
+    }
 }
