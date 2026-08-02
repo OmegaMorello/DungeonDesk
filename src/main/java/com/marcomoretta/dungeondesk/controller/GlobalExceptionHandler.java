@@ -62,12 +62,12 @@ public class GlobalExceptionHandler {
     /**
      * Fallback for database constraint violations that escaped the application checks
      * (e.g. two concurrent requests creating the same username).
-     * @param ex the exception raised by the persistence layer
-     * @return a generic conflict message and a 409 Conflict
+     * @param ex The exception raised by the persistence layer
+     * @return Ex conflict message and a 409 Conflict
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorDto> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-        ErrorDto errorDto = new ErrorDto("The operation conflicts with existing data.");
+        ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 }
