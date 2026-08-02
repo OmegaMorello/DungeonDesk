@@ -3,6 +3,8 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
@@ -28,6 +30,7 @@ public class GameSession {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Campaign campaign;
 

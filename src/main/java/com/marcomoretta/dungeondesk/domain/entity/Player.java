@@ -29,6 +29,9 @@ public class Player {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String normalizedName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id", nullable = false)
     @ToString.Exclude
@@ -40,4 +43,14 @@ public class Player {
 //    @ToString.Exclude
 //    @Builder.Default
 //    private List<CharSheet> charSheets = new ArrayList<>()
+
+    @PrePersist
+    @PreUpdate
+    private void computeNormalizedName() {
+        if (name != null) normalizedName = normalize(name);
+    }
+
+    public static String normalize(String raw) {
+        return raw.strip().toLowerCase();
+    }
 }

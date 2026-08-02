@@ -3,6 +3,8 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
@@ -31,6 +33,7 @@ public class Note {
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "campaign_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Campaign campaign;
 
@@ -39,6 +42,7 @@ public class Note {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_session_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @ToString.Exclude
     private GameSession gameSession;
 

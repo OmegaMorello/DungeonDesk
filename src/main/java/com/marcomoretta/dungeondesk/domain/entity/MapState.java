@@ -25,7 +25,7 @@ public class MapState {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long mapId;
+    private Long mapStateId;
 
     @Column(nullable = false)
     @Min(1)
@@ -40,7 +40,7 @@ public class MapState {
     @Builder.Default
     private String backgroundUrl = "";
 
-    @OneToMany(mappedBy = "map_state")
+    @OneToMany(mappedBy = "mapState", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
     private List<Token> tokenList = new ArrayList<>();
