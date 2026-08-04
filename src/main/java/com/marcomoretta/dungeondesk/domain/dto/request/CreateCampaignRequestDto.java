@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 /**
  * Dto needed to pass Campaign creation fields
  *
- * @param name   The name of the campaign
+ * @param name        The name of the campaign
  * @param description The optional description of the campaign
  */
 public record CreateCampaignRequestDto(

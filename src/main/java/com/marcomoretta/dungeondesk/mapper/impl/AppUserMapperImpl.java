@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Mapper for the AppUser to and from Dto
+ * Mapper for AppUser DTOs
  */
 @Component
 public class AppUserMapperImpl implements AppUserMapper {

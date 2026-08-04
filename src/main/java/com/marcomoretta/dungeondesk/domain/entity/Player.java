@@ -50,6 +50,11 @@ public class Player {
         if (name != null) normalizedName = normalize(name);
     }
 
+    /**
+     * Static method used to normalize a player name in order to maintain uniqueness
+     * @param raw Raw player name
+     * @return All lowercase player name
+     */
     public static String normalize(String raw) {
         return raw.strip().toLowerCase();
     }

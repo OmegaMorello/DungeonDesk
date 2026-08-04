@@ -1,5 +1,7 @@
 package com.marcomoretta.dungeondesk.controller;
 
+import com.marcomoretta.dungeondesk.auth.AuthInterceptor;
+import com.marcomoretta.dungeondesk.auth.AuthSession;
 import com.marcomoretta.dungeondesk.domain.dto.CampaignDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Controller to manage the campaign related requests
+ */
 @RestController
 @RequestMapping("/api/v1/campaigns")
 public class CampaignController {
@@ -30,7 +35,7 @@ public class CampaignController {
     }
 
     /**
-     * Requests a campaign by its id
+     * Requests a specified campaign by its id
      *
      * @param id The requested campaign id
      * @return Status 200 with the campaign dto
@@ -40,21 +45,36 @@ public class CampaignController {
         return ResponseEntity.ok(campaignMapper.toDto(campaignService.getCampaign(id)));
     }
 
-    //TODO: Implement Auth session user
+    /**
+     * Request the owner's campaign list
+     *
+     * @param authSession The active client session
+     * @return The campaign list dto [200 - OK]
+     */
     @GetMapping
-    public ResponseEntity<List<CampaignDto>> getCampaignList(@RequestParam Long ownerId) {
+    public ResponseEntity<List<CampaignDto>> getCampaignList(
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
-        List<CampaignDto> campaignDto = campaignMapper.toDtoList(campaignService.getAllCampaigns(ownerId));
+        authSession.requireMaster();
+        List<CampaignDto> campaignDto = campaignMapper.toDtoList(campaignService.getAllCampaigns(authSession.userId()));
 
         return ResponseEntity.ok(campaignDto);
     }
 
-    //TODO: Implement Auth session user
+    /**
+     * Request to create a campaign
+     *
+     * @param createCampaignRequestDto The creation request details
+     * @param authSession              The active client session
+     * @return The correctly created campaign [201 - CREATED]
+     */
     @PostMapping
-    public ResponseEntity<CampaignDto> createCampaign(@Valid @RequestBody CreateCampaignRequestDto createCampaignRequestDto,
-                                                      @RequestParam Long userId) {
+    public ResponseEntity<CampaignDto> createCampaign(
+            @Valid @RequestBody CreateCampaignRequestDto createCampaignRequestDto,
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
-        CreateCampaignRequest createCampaignRequest = campaignMapper.fromCreateDto(createCampaignRequestDto, userId);
+        authSession.requireMaster();
+        CreateCampaignRequest createCampaignRequest = campaignMapper.fromCreateDto(createCampaignRequestDto, authSession.userId());
         Campaign campaign = campaignService.createCampaign(createCampaignRequest);
         CampaignDto campaignDto = campaignMapper.toDto(campaign);
 
@@ -63,43 +83,78 @@ public class CampaignController {
                 .body(campaignDto); //TODO: Check warning
     }
 
-    //TODO: Implement Auth session user
+    /**
+     * Request to delete an owned campaign
+     *
+     * @param campaignId  The id of the campaign to delete
+     * @param authSession The active client session
+     * @return An empty response in case of successfully deleted campaign [204 - NO CONTENT]
+     */
     @DeleteMapping("/{campaignId}")
     public ResponseEntity<Void> deleteCampaign(@PathVariable Long campaignId,
-                                                     @RequestParam Long requesterId) {
-        campaignService.deleteCampaign(campaignId, requesterId);
+                                               @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
+        campaignService.deleteCampaign(campaignId, authSession.userId());
 
         return ResponseEntity.noContent().build();
     }
 
-    //TODO: Implement Auth session user
+    /**
+     * Request to update an owned campaign
+     *
+     * @param campaignId               The id of the campaign to update
+     * @param updateCampaignRequestDto The update request details
+     * @param authSession              The active client session
+     * @return The successfully updated campaign [200 - OK]
+     */
     @PutMapping("/{campaignId}")
     public ResponseEntity<CampaignDto> updateCampaign(@PathVariable Long campaignId,
                                                       @Valid @RequestBody UpdateCampaignRequestDto updateCampaignRequestDto,
-                                                      @RequestParam Long requesterId) {
+                                                      @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
         UpdateCampaignRequest updateCampaignRequest = campaignMapper.fromUpdateDto(updateCampaignRequestDto, campaignId);
-        Campaign campaign = campaignService.updateCampaign(updateCampaignRequest, requesterId);
+        Campaign campaign = campaignService.updateCampaign(updateCampaignRequest, authSession.userId());
 
         return ResponseEntity.ok(campaignMapper.toDto(campaign));
     }
 
-    //TODO: Implement Auth session user
+    /**
+     * Request to add a player to a campaign
+     *
+     * @param campaignId          The id of the campaign to which the player should be added
+     * @param addPlayerRequestDto The player details
+     * @param authSession         The active client session
+     * @return The campaign info with the correctly updated players list
+     */
     @PostMapping("/{campaignId}/players")
     public ResponseEntity<CampaignDto> addPlayer(@PathVariable Long campaignId,
-                                              @Valid @RequestBody AddPlayerRequestDto addPlayerRequestDto,
-                                              @RequestParam Long requesterId) {
+                                                 @Valid @RequestBody AddPlayerRequestDto addPlayerRequestDto,
+                                                 @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
         AddPlayerRequest addPlayerRequest = campaignMapper.fromAddPlayerDto(addPlayerRequestDto, campaignId);
-        Campaign campaign = campaignService.addPlayer(addPlayerRequest, requesterId);
+        Campaign campaign = campaignService.addPlayer(addPlayerRequest, authSession.userId());
 
         return ResponseEntity.ok(campaignMapper.toDto(campaign));
     }
 
-    //TODO: Implement Auth session user
+    /**
+     * Request to remove a player from a campaign
+     *
+     * @param campaignId  The id of the campaign from which the player should be removed
+     * @param playerId    The player id
+     * @param authSession The active client session
+     * @return The campaign info with the correctly updated players list
+     */
     @DeleteMapping("/{campaignId}/players")
     public ResponseEntity<CampaignDto> removePlayer(@PathVariable Long campaignId,
-                                                 @RequestParam Long playerId,
-                                                 @RequestParam Long requesterId) {
-        Campaign campaign = campaignService.removePlayer(campaignId, playerId, requesterId);
+                                                    @RequestParam Long playerId,
+                                                    @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
+        Campaign campaign = campaignService.removePlayer(campaignId, playerId, authSession.userId());
 
         return ResponseEntity.ok(campaignMapper.toDto(campaign));
     }

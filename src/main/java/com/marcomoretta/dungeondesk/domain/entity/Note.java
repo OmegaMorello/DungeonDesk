@@ -28,28 +28,24 @@ public class Note {
     @EqualsAndHashCode.Include
     private Long noteId;
 
-    /**
-     * Notes must be associated to a campaign
-     */
+
+    // Notes must be associated to a campaign
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "campaign_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Campaign campaign;
 
-    /**
-     * Optionally, notes can be assigned to a specific game session
-     */
+    // Optionally, notes can be assigned to a specific game session
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_session_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @ToString.Exclude
     private GameSession gameSession;
 
-    /**
-     * False: visible only to DM
-     * True: visible to DM + all players
-     */
+
+    // False: visible only to DM
+    // True: visible to DM + all players
     @Column(nullable = false)
     private boolean sharedWithPlayers;
 

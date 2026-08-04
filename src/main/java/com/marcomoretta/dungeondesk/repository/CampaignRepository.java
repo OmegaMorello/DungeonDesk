@@ -10,6 +10,7 @@ import java.util.Optional;
 
 /**
  * Campaign persistency layer interface
+ * EntityGraphs are used to extract lazy fetch fields
  */
 @Repository
 public interface CampaignRepository extends JpaRepository<Campaign, Long> {

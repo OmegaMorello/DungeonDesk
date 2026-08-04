@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Mapper for campaign DTOs
+ */
 @Component
 public class CampaignMapperImpl implements CampaignMapper {
     @Override

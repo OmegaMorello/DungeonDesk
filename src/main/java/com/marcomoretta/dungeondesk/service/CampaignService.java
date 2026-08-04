@@ -35,13 +35,11 @@ public interface CampaignService {
      */
     List<Campaign> getAllCampaigns(Long ownerId);
 
-    //TODO: user needs to be authenticated to delete a campaign
-
     /**
      * Deletes a campaign
      *
-     * @param campaignId The id of the campaign to delete
-     * @param requesterId     The id of the requester
+     * @param campaignId  The id of the campaign to delete
+     * @param requesterId The id of the requester
      */
     void deleteCampaign(Long campaignId, Long requesterId);
 
@@ -55,7 +53,7 @@ public interface CampaignService {
     /**
      * Updates campaign information such as name and secret
      *
-     * @param request Information to update
+     * @param request     Information to update
      * @param requesterId The id of the requester
      * @return Updated Campaign
      */

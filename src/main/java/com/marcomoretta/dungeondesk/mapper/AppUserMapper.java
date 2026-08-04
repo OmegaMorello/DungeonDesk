@@ -10,35 +10,39 @@ import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 import java.util.List;
 
 /**
- * App User DTO mapper
+ * App User DTO mapper interface
  */
 public interface AppUserMapper {
 
     /**
      * Maps a user create request from a dto
-     * @param dto presentation layer request dto
-     * @return the service layer request
+     *
+     * @param dto Presentation layer request dto
+     * @return The service layer request
      */
     CreateAppUserRequest fromCreateDto(CreateAppUserRequestDto dto);
 
     /**
      * Maps a user update request from a dto
-     * @param dto presentation layer request dto
-     * @return the service layer request
+     *
+     * @param dto Presentation layer request dto
+     * @return The service layer request
      */
     UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto);
 
     /**
      * Maps a user to a dto
-     * @param appUser service layer user
-     * @return presentation layer user dto
+     *
+     * @param appUser Service layer user
+     * @return Presentation layer user dto
      */
     AppUserDto toDto(AppUser appUser);
 
     /**
      * Maps a user list to a dto list
-     * @param appUserList service layer user list
-     * @return presentation layer user list dto
+     *
+     * @param appUserList Service layer user list
+     * @return Presentation layer user list dto
      */
     List<AppUserDto> toDtoList(List<AppUser> appUserList);
 }

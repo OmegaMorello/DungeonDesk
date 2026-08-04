@@ -20,50 +20,57 @@ public interface CampaignMapper {
 
     /**
      * Maps a campaign create request from a dto
-     * @param dto presentation layer request dto
-     * @return the service layer request
+     *
+     * @param dto Presentation layer request dto
+     * @return The service layer request
      */
     CreateCampaignRequest fromCreateDto(CreateCampaignRequestDto dto, Long ownerId);
 
     /**
      * Maps a campaign update request from a dto
-     * @param dto presentation layer request dto
-     * @return the service layer request
+     *
+     * @param dto Presentation layer request dto
+     * @return The service layer request
      */
     UpdateCampaignRequest fromUpdateDto(UpdateCampaignRequestDto dto, Long campaignId);
 
     /**
      * Maps an add player request from a dto
-     * @param dto presentation layer request dto
-     * @return the service layer request
+     *
+     * @param dto Presentation layer request dto
+     * @return The service layer request
      */
     AddPlayerRequest fromAddPlayerDto(AddPlayerRequestDto dto, Long campaignId);
 
     /**
      * Maps a campaign to a dto
-     * @param campaign service layer campaign
-     * @return presentation layer campaign dto
+     *
+     * @param campaign Service layer campaign
+     * @return Presentation layer campaign dto
      */
     CampaignDto toDto(Campaign campaign);
 
     /**
      * Maps a campaign list to a dto
-     * @param campaignList service layer campaign list
-     * @return presentation layer campaign list dto
+     *
+     * @param campaignList Service layer campaign list
+     * @return Presentation layer campaign list dto
      */
     List<CampaignDto> toDtoList(List<Campaign> campaignList);
 
     /**
      * Maps a player to a dto
-     * @param player service layer player
-     * @return presentation layer player dto
+     *
+     * @param player Service layer player
+     * @return Presentation layer player dto
      */
     PlayerDto toPlayerDto(Player player);
 
     /**
      * Maps a player list to a dto
-     * @param playerList service layer player list
-     * @return presentation layer player dto list
+     *
+     * @param playerList Service layer player list
+     * @return Presentation layer player dto list
      */
     List<PlayerDto> toPlayerDtoList(List<Player> playerList);
 }

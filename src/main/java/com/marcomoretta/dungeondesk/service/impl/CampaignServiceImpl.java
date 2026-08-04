@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Serves the Campaign controller
+ */
 @Service
 public class CampaignServiceImpl implements CampaignService {
 
