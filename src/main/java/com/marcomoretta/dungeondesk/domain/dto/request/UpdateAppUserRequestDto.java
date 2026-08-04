@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 /**
  * Dto needed to pass Campaign update fields
  *
- * @param username        The updated name
- * @param secret The updated secret
+ * @param username The updated username
+ * @param secret   The updated secret
  */
 public record UpdateAppUserRequestDto(
         @NotBlank(message = ERROR_MESSAGE_NAME_LENGTH)
@@ -19,11 +19,12 @@ public record UpdateAppUserRequestDto(
         String secret
 ) {
     /**
-     * Trims (strips) the name and the secret during construction
+     * Trims (strips) the name during construction
      */
     public UpdateAppUserRequestDto {
         if (username != null) username = username.strip();
     }
 
     private static final String ERROR_MESSAGE_NAME_LENGTH = "Name must be between 1 and 255 characters long";
-    private static final String ERROR_MESSAGE_SECRET_LENGTH = "Secret must be at least 8 characters long";}
+    private static final String ERROR_MESSAGE_SECRET_LENGTH = "Secret must be at least 8 characters long";
+}

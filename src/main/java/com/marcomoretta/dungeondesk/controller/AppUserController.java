@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * Class that exposes REST APIs for users management
+ * REST API Controller to manage users requests
  */
 @RestController
 @RequestMapping(path = "/api/v1/appusers")
@@ -28,15 +28,21 @@ public class AppUserController {
         this.appUserMapper = appUserMapper;
     }
 
+    /**
+     * Requests a specified user by its id
+     *
+     * @param id The id of the user to find
+     * @return The specified user [200 - OK]
+     */
     @GetMapping("/{id}")
     public ResponseEntity<AppUserDto> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(appUserMapper.toDto(appUserService.getUser(id)));
     }
 
     /**
-     * Gets the complete users list
+     * Requests the complete users list
      *
-     * @return users list dto
+     * @return Users list dto [200 - OK]
      */
     @GetMapping
     public ResponseEntity<List<AppUserDto>> listUsers() {
@@ -46,10 +52,10 @@ public class AppUserController {
     }
 
     /**
-     * Creates a new user
+     * Requests to create a new user
      *
-     * @param createAppUserRequestDto the dto container with name and secret
-     * @return a response 201 CREATED if the user is correctly created
+     * @param createAppUserRequestDto The dto container with name and secret
+     * @return The correctly created user [201 - CREATED]
      */
     @PostMapping
     public ResponseEntity<AppUserDto> createUser(

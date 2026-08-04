@@ -34,10 +34,9 @@ public class GameSession {
     @ToString.Exclude
     private Campaign campaign;
 
-    /**
-     * Session join code will not be hashed, it is used by players to connect to a session.
-     * Dungeon Master can change it anytime.
-     */
+
+    // Session join code will not be hashed, it is used by players to connect to a session.
+    // Dungeon Master can change it anytime.
     @Column(nullable = false)
     private String joinCode;
 
