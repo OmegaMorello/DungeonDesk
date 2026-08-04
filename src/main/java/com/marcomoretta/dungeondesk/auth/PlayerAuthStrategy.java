@@ -16,7 +16,7 @@ public class PlayerAuthStrategy implements AuthStrategy {
     private final SessionStore sessionStore;
     private final GameSessionRepository gameSessionRepository;
 
-    public PlayerAuthStrategy(SessionStore sessionStore, GameSessionRepository gameSessionRepository, SecretHasher secretHasher) {
+    public PlayerAuthStrategy(SessionStore sessionStore, GameSessionRepository gameSessionRepository) {
         this.sessionStore = sessionStore;
         this.gameSessionRepository = gameSessionRepository;
     }
