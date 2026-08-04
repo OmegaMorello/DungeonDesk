@@ -1,6 +1,10 @@
 package com.marcomoretta.dungeondesk.exception;
 
-public abstract class ResourcePermissionException extends RuntimeException {
+/**
+ * Abstract class to help the global exception handler
+ * Extend when an unauthorized exception is needed
+ */
+public class ResourcePermissionException extends RuntimeException {
     public ResourcePermissionException(String message) {
         super(message);
     }
