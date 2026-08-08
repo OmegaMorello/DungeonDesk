@@ -6,6 +6,7 @@ import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 import com.marcomoretta.dungeondesk.exception.AppUserNotFoundException;
 import com.marcomoretta.dungeondesk.exception.DuplicateUsernameException;
+import com.marcomoretta.dungeondesk.exception.InvalidCredentialsException;
 import com.marcomoretta.dungeondesk.repository.AppUserRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
 import org.springframework.data.domain.Sort;
@@ -63,12 +64,15 @@ public class AppUserServiceImpl implements AppUserService {
 
         AppUser user = getUser(request.id());
 
+        if (!secretHasher.matches(request.currentSecret(), user.getHashSecret()))
+            throw new InvalidCredentialsException();
+
         // Checks duplicate only if the name is changing
         if (!user.getUsername().equals(request.username()))
             checkDuplicate(request.username());
 
         user.setUsername(request.username());
-        user.setHashSecret(secretHasher.hash(request.secret()));
+        user.setHashSecret(secretHasher.hash(request.newSecret()));
 
         return appUserRepository.save(user);
     }

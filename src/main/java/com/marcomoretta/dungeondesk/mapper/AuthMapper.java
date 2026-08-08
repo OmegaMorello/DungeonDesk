@@ -2,6 +2,7 @@ package com.marcomoretta.dungeondesk.mapper;
 
 import com.marcomoretta.dungeondesk.auth.AuthSession;
 import com.marcomoretta.dungeondesk.domain.dto.AuthSessionDto;
+import com.marcomoretta.dungeondesk.domain.dto.SessionInfoDto;
 
 /**
  * Auth DTO mapper interface
@@ -15,4 +16,6 @@ public interface AuthMapper {
      * @return Presentation layer auth session dto
      */
     AuthSessionDto toDto(AuthSession authSession);
+
+    SessionInfoDto toSessionInfoDto(AuthSession authSession);
 }

@@ -9,7 +9,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.Instant;
 
 /**
- * Game Session: the current session, only one per campaign
+ * Game Session: a play session of a campaign. A session is running while its end
+ * date is null; the application allows a single open session at a time.
  */
 @Entity
 @Table(name = "game_session")

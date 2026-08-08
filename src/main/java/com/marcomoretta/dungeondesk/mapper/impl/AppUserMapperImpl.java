@@ -25,10 +25,14 @@ public class AppUserMapperImpl implements AppUserMapper {
         );
     }
 
-    //TODO: Implement update user request
     @Override
-    public UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto) {
-        return null;
+    public UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto, Long id) {
+        return new UpdateAppUserRequest(
+                id,
+                dto.username(),
+                dto.currentSecret(),
+                dto.newSecret()
+        );
     }
 
 

@@ -6,17 +6,21 @@ import jakarta.validation.constraints.Size;
 /**
  * Dto needed to pass Campaign update fields
  *
- * @param username The updated username
- * @param secret   The updated secret
+ * @param username      The updated username
+ * @param currentSecret The current secret
+ * @param newSecret     The updated secret
  */
 public record UpdateAppUserRequestDto(
         @NotBlank(message = ERROR_MESSAGE_NAME_LENGTH)
         @Size(max = 255, message = ERROR_MESSAGE_NAME_LENGTH)
         String username,
 
+        @NotBlank
+        String currentSecret,
+
         @NotBlank(message = ERROR_MESSAGE_SECRET_LENGTH)
         @Size(min = 8, message = ERROR_MESSAGE_SECRET_LENGTH)
-        String secret
+        String newSecret
 ) {
     /**
      * Trims (strips) the name during construction

@@ -28,7 +28,7 @@ public interface AppUserMapper {
      * @param dto Presentation layer request dto
      * @return The service layer request
      */
-    UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto);
+    UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto, Long id);
 
     /**
      * Maps a user to a dto

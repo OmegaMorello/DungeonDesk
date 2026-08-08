@@ -44,7 +44,7 @@ public class PlayerAuthStrategy implements AuthStrategy {
                 .findFirst()
                 .orElseThrow(InvalidCredentialsException::new);
 
-        return sessionStore.createPlayerSession(player.getPlayerId(), campaign.getCampaignId());
+        return sessionStore.createPlayerSession(player.getPlayerId(), campaign.getCampaignId(), player.getName());
     }
 
     @Override

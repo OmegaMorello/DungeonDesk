@@ -36,7 +36,7 @@ public class MasterAuthStrategy implements AuthStrategy {
         if (!secretHasher.matches(secret, user.getHashSecret()))
             throw new InvalidCredentialsException();
 
-        return sessionStore.createMasterSession(user.getUserId());
+        return sessionStore.createMasterSession(user.getUserId(), user.getUsername());
     }
 
     @Override
