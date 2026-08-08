@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Interface that defines the Note Service.
- *
+ * <p>
  * Every method takes the caller's AuthSession rather than a plain id: reading
  * notes requires both the identity and the role, because a player may only see the
  * notes flagged as shared. Writing is reserved to the Dungeon Master who owns the
