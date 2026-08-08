@@ -18,7 +18,7 @@ public class SessionStore {
     private final Map<String, AuthSession> sessions = new ConcurrentHashMap<>();
 
     /**
-     * Saves the session in the Hash Map with the randomly generated token as the key
+     * Save the session in the Hash Map with the randomly generated token as the key
      *
      * @param session The auth session to be saved
      * @return The saved auth session
@@ -37,7 +37,7 @@ public class SessionStore {
 
 
     /**
-     * Creates the Master session, passing the building parameters to the store method
+     * Create the Master session, passing the building parameters to the store method
      *
      * @param userId      The requester user id
      * @param displayName The name to be displayed
@@ -53,7 +53,7 @@ public class SessionStore {
     }
 
     /**
-     * Creates the Player session, passing the building parameters to the store method
+     * Create the Player session, passing the building parameters to the store method
      *
      * @param playerId    The requester player id
      * @param campaignId  The id of the campaign
@@ -72,7 +72,7 @@ public class SessionStore {
     }
 
     /**
-     * Searched for a session with a specified token
+     * Search for a session with a specified token
      * Used for a persistent authentication of the client
      *
      * @param token The UUID sent by the client
