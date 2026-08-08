@@ -19,6 +19,7 @@ public class SessionStore {
 
     /**
      * Saves the session in the Hash Map with the randomly generated token as the key
+     *
      * @param session The auth session to be saved
      * @return The saved auth session
      */
@@ -37,29 +38,35 @@ public class SessionStore {
 
     /**
      * Creates the Master session, passing the building parameters to the store method
-     * @param userId The requester user id
+     *
+     * @param userId      The requester user id
+     * @param displayName The name to be displayed
      * @return An unfinished auth session, to be completed by the store method
      */
-    public AuthSession createMasterSession(Long userId) {
+    public AuthSession createMasterSession(Long userId, String displayName) {
 
         return store(AuthSession.builder()
                 .loginType(LoginType.MASTER)
                 .userId(userId)
+                .displayName(displayName)
                 .build());
     }
 
     /**
      * Creates the Player session, passing the building parameters to the store method
-     * @param playerId The requester player id
-     * @param campaignId The id of the campaign
+     *
+     * @param playerId    The requester player id
+     * @param campaignId  The id of the campaign
+     * @param displayName The name to be displayed
      * @return An unfinished auth session, to be completed by the store method
      */
-    public AuthSession createPlayerSession(Long playerId, Long campaignId) {
+    public AuthSession createPlayerSession(Long playerId, Long campaignId, String displayName) {
 
         return store(AuthSession.builder()
                 .loginType(LoginType.PLAYER)
                 .playerId(playerId)
                 .campaignId(campaignId)
+                .displayName(displayName)
                 .build());
 
     }
@@ -67,6 +74,7 @@ public class SessionStore {
     /**
      * Searched for a session with a specified token
      * Used for a persistent authentication of the client
+     *
      * @param token The UUID sent by the client
      * @return The session in case it was found
      */
@@ -77,6 +85,7 @@ public class SessionStore {
     /**
      * Removes the session with the specified
      * Used for the logout of the client
+     *
      * @param token The token of the session to remove
      */
     public void remove(String token) {

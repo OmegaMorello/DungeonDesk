@@ -8,12 +8,13 @@ import java.time.Instant;
 /**
  * Custom authentication session container
  *
- * @param token      Unique identifier sent to the client and returned on every request
- * @param loginType  Determines which fields are populated
- * @param userId     MASTER only userId
- * @param playerId   PLAYER only playerId
- * @param campaignId PLAYER only campaignId
- * @param createdAt  creation timestamp
+ * @param token       Unique identifier sent to the client and returned on every request
+ * @param loginType   Determines which fields are populated
+ * @param userId      MASTER only userId
+ * @param playerId    PLAYER only playerId
+ * @param campaignId  PLAYER only campaignId
+ * @param displayName The name to be displayed
+ * @param createdAt   creation timestamp
  */
 @Builder(toBuilder = true) // Enables continue building between methods - see SessionStore
 public record AuthSession(
@@ -22,6 +23,7 @@ public record AuthSession(
         Long userId,
         Long playerId,
         Long campaignId,
+        String displayName,
         Instant createdAt
 ) {
     /**
