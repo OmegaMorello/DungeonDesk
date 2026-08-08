@@ -6,18 +6,24 @@ import com.marcomoretta.dungeondesk.auth.SessionStore;
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
 import com.marcomoretta.dungeondesk.domain.dto.AuthSessionDto;
 import com.marcomoretta.dungeondesk.domain.dto.SessionInfoDto;
+import com.marcomoretta.dungeondesk.domain.dto.SessionPlayerDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.LoginRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
+import com.marcomoretta.dungeondesk.domain.entity.Player;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
 import com.marcomoretta.dungeondesk.mapper.AuthMapper;
+import com.marcomoretta.dungeondesk.mapper.GameSessionMapper;
 import com.marcomoretta.dungeondesk.service.AppUserService;
 import com.marcomoretta.dungeondesk.service.AuthService;
+import com.marcomoretta.dungeondesk.service.GameSessionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * REST API Controller to manage authentication
@@ -31,13 +37,17 @@ public class AuthController {
     private final SessionStore sessionStore;
     private final AppUserMapper appUserMapper;
     private final AppUserService appUserService;
+    private final GameSessionMapper gameSessionMapper;
+    private final GameSessionService gameSessionService;
 
-    public AuthController(AuthMapper authMapper, AuthService authService, SessionStore sessionStore, AppUserMapper appUserMapper, AppUserService appUserService) {
+    public AuthController(AuthMapper authMapper, AuthService authService, SessionStore sessionStore, AppUserMapper appUserMapper, AppUserService appUserService, GameSessionMapper gameSessionMapper, GameSessionService gameSessionService) {
         this.authMapper = authMapper;
         this.authService = authService;
         this.sessionStore = sessionStore;
         this.appUserMapper = appUserMapper;
         this.appUserService = appUserService;
+        this.gameSessionMapper = gameSessionMapper;
+        this.gameSessionService = gameSessionService;
     }
 
     /**
@@ -94,8 +104,17 @@ public class AuthController {
         return ResponseEntity.ok(authMapper.toSessionInfoDto(authSession));
     }
 
-//    @GetMapping("/sessions/players")
-//    public ResponseEntity<List<PlayerDto>> getPlayerList() {
-//
-//    }
+    /**
+     * Requests the roster of the running session, so a player can pick their name.
+     * TODO: hide the players already connected once the claim is made thread safe.
+     *
+     * @return The available names, empty list when no session is running [200 - OK]
+     */
+    @GetMapping("/session/players")
+    public ResponseEntity<List<SessionPlayerDto>> getAvailablePlayers() {
+
+        List<Player> roster = gameSessionService.getActiveSessionRoster();
+
+        return ResponseEntity.ok(gameSessionMapper.toSessionPlayerDtoList(roster));
+    }
 }
