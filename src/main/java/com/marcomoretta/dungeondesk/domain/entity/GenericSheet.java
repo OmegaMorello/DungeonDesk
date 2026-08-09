@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -30,9 +29,7 @@ public abstract class GenericSheet {
     @Column(updatable = false, nullable = false)
     private Long sheetId;
 
-    /**
-     * The Dungeon Master who created the sheet.
-     */
+    // Every sheet belongs to a Dungeon Master, assigned or not
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_id", nullable = false)
     @ToString.Exclude
@@ -57,15 +54,10 @@ public abstract class GenericSheet {
     private int wisdom;
     private int charisma;
 
-
     // ---- Proficiencies -----------------------------------------------------------
 
     private int proficiencyBonus;
 
-    /**
-     * Skills the creature is proficient with: the proficiency bonus is added once to
-     * their modifier.
-     */
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "sheet_skill_proficiency", joinColumns = @JoinColumn(name = "sheet_id"))
     @Column(name = "skill")
@@ -74,10 +66,7 @@ public abstract class GenericSheet {
     @Builder.Default
     private Set<Skill> skillProficiencies = EnumSet.noneOf(Skill.class);
 
-    /**
-     * Skills with expertise: the proficiency bonus is added a second time. A skill
-     * listed here is expected to be listed among the proficiencies as well.
-     */
+    // Proficiency bonus counted twice
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "sheet_skill_expertise", joinColumns = @JoinColumn(name = "sheet_id"))
     @Column(name = "skill")
@@ -106,7 +95,7 @@ public abstract class GenericSheet {
     @CollectionTable(name = "sheet_spell_slot", joinColumns = @JoinColumn(name = "sheet_id"))
     @ToString.Exclude
     @Builder.Default
-    private List<SpellSlot> spellSlots = new ArrayList<>();
+    private Set<SpellSlot> spellSlots = new HashSet<>();
 
     // ---- Actions -----------------------------------------------------------------
 
@@ -114,7 +103,7 @@ public abstract class GenericSheet {
     @CollectionTable(name = "sheet_attack", joinColumns = @JoinColumn(name = "sheet_id"))
     @ToString.Exclude
     @Builder.Default
-    private List<Attack> attacks = new ArrayList<>();
+    private Set<Attack> attacks = new HashSet<>();
 
     /**
      * Everything the sheet does not model as a number: equipment, traits, languages, senses, resistances.
@@ -123,7 +112,7 @@ public abstract class GenericSheet {
     @Column(length = 4000)
     private String notes;
 
-    // ==== Derived values ==========================================================
+    // ---- Derived values ----------------------------------------------------------
 
     /**
      * Reads one of the six scores through the enum
@@ -200,10 +189,7 @@ public abstract class GenericSheet {
     }
 
     /**
-     * Difficulty class of the spells cast by this creature: eight plus the proficiency
-     * bonus plus the spellcasting ability modifier.
-     *
-     * @return The save DC, or null when the creature does not cast spells
+     * @return Eight plus proficiency bonus plus spellcasting modifier, null if it does not cast
      */
     public Integer getSpellSaveDc() {
         if (spellcastingAbility == null) return null;
@@ -212,10 +198,7 @@ public abstract class GenericSheet {
     }
 
     /**
-     * Attack bonus for spell attacks: the proficiency bonus plus the spellcasting
-     * ability modifier.
-     *
-     * @return The bonus, or null when the creature does not cast spells
+     * @return Proficiency bonus plus spellcasting modifier, null if it does not cast
      */
     public Integer getSpellAttackBonus() {
         if (spellcastingAbility == null) return null;
@@ -246,6 +229,18 @@ public abstract class GenericSheet {
      */
     public int getDamageModifier(Attack attack) {
         return attack.getAbility() == null ? 0 : getAbilityModifier(attack.getAbility());
+    }
+
+    /**
+     * Helper for the UI to show the complete damage string
+     *
+     * @param attack The attack/weapon to extract the damage string from
+     * @return The complete damage formula
+     */
+    public String getDamageFormula(Attack attack) {
+        int damageModifier = getDamageModifier(attack);
+
+        return attack.getDamageDie() + (damageModifier < 0 ? damageModifier : "+" + damageModifier);
     }
 
 }

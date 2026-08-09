@@ -36,9 +36,6 @@ public enum Skill {
         this.ability = ability;
     }
 
-    /**
-     * @return The ability whose modifier this skill is based on
-     */
     public Ability getAbility() {
         return ability;
     }

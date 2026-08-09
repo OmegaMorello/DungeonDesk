@@ -6,10 +6,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Sheet of an enemy or non playing character, belonging to the Dungeon Master library
- * rather than to a campaign, so that the same creature can be reused across campaigns.
- * Every creature on the map owns its own sheet: placing five goblins creates five
- * sheets, because current hit points are per creature.
+ * Enemy Sheet: the sheet of an enemy or non playing character
+ * Belongs to the Dungeon Master library, so it can be reused across campaigns
+ * Every creature owns its own sheet: five goblins are five sheets
  */
 @Entity
 @DiscriminatorValue("ENEMY")

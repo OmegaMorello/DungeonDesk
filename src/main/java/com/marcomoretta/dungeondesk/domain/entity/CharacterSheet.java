@@ -5,9 +5,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Sheet of a player character.
- * May exist without a player: the Dungeon Master can prepare a sheet before assigning
- * it, and a sheet survives the removal of the player it belonged to.
+ * Character Sheet: the sheet of a player character
+ * May exist without a player, so it can be prepared before being assigned
  */
 @Entity
 @DiscriminatorValue("CHARACTER")
@@ -19,9 +18,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class CharacterSheet extends GenericSheet {
 
-    /**
-     * The player this sheet belongs to, at most one.
-     */
+    // At most one player
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id", unique = true)
     @ToString.Exclude
