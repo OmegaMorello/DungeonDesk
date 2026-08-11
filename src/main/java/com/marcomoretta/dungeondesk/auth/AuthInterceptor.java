@@ -1,10 +1,12 @@
 package com.marcomoretta.dungeondesk.auth;
 
 import com.marcomoretta.dungeondesk.exception.UnauthenticatedException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.util.WebUtils;
 
 /**
  * Interceptor that can act between auth requests
@@ -12,8 +14,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
-    public static final String SESSION_ATTRIBUTE = "authSession";
-    private static final String BEARER_PREFIX = "Bearer ";
+    public static final String SESSION_ATTRIBUTE = "auth_session";
+    public static final String COOKIE_NAME = "dd_session";
     private final SessionStore sessionStore;
 
     public AuthInterceptor(SessionStore sessionStore) {
@@ -27,11 +29,10 @@ public class AuthInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith(BEARER_PREFIX))
-            throw new UnauthenticatedException();
+        Cookie cookie = WebUtils.getCookie(request, COOKIE_NAME);
+        if (cookie == null) throw new UnauthenticatedException();
 
-        String token = header.substring(BEARER_PREFIX.length());
+        String token = cookie.getValue();
 
         AuthSession session = sessionStore.find(token).orElseThrow(UnauthenticatedException::new);
         request.setAttribute(SESSION_ATTRIBUTE, session);

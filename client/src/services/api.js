@@ -3,13 +3,10 @@
 // Generic helper: does the fetch and parses the JSON response.
 // Instead of using cookies, I use the custom token header for auth
 async function request(url, options = {}) {
-  const token = localStorage.getItem("token");
-
   const res = await fetch(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
   });
@@ -38,23 +35,17 @@ export function register({ username, secret }) {
 }
 
 // POST /api/v1/auth/login -> { auth session }
-export async function login({ loginType, username, secret }) {
+export function login({ loginType, username, secret }) {
   // Creating a data variable to store the session data
-  const data = await request("/api/v1/auth/login", {
+  return request("/api/v1/auth/login", {
     method: "POST",
     body: JSON.stringify({ loginType, username, secret }),
   });
-  localStorage.setItem("token", data.token); // Save the token in the session storage
-  return data;
 }
 
 // POST /api/v1/auth/logout -> { no content: ok }
-export async function logout() {
-  try {
-    await request("/api/v1/auth/logout", { method: "POST" });
-  } finally {
-    localStorage.removeItem("token"); // Remove the token from the session storage
-  }
+export function logout() {
+  return request("/api/v1/auth/logout", { method: "POST" });
 }
 
 // GET /api/v1/auth/me -> { login type, name, campaign id } | null
