@@ -84,7 +84,6 @@ class ObservableTest {
         observable.notifyObservers(event);
 
         // Assert
-        assertTrue(failingObserver.gameEventList.isEmpty());
         assertEquals(1, observer.gameEventList.size());
         assertEquals(event, observer.gameEventList.getFirst());
     }
@@ -101,7 +100,6 @@ class ObservableTest {
 
         // Act and Assert
         assertDoesNotThrow(() -> observable.notifyObservers(event));
-        assertTrue(observer.gameEventList.isEmpty());
     }
 
 
@@ -116,8 +114,6 @@ class ObservableTest {
     }
 
     private static class TestFailingObserver implements Observer<GameEvent> {
-        private final List<GameEvent> gameEventList = new ArrayList<>();
-
         @Override
         public void onEvent(GameEvent event) {
             throw new RuntimeException("Deaf, cannot listen to event: " + event.toString());

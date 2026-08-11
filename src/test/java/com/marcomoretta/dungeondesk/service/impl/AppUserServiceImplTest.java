@@ -12,7 +12,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -32,10 +31,6 @@ class AppUserServiceImplTest {
 
     @Captor
     ArgumentCaptor<AppUser> captor;
-
-    @Captor
-    ArgumentCaptor<Sort> sortCaptor = ArgumentCaptor.forClass(Sort.class);
-
 
     @Test
     void createUser() throws DuplicateUsernameException {

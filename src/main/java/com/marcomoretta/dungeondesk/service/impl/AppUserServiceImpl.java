@@ -9,7 +9,6 @@ import com.marcomoretta.dungeondesk.exception.DuplicateUsernameException;
 import com.marcomoretta.dungeondesk.exception.InvalidCredentialsException;
 import com.marcomoretta.dungeondesk.repository.AppUserRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,6 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final SecretHasher secretHasher;
-    private final static Sort BY_USERNAME_ASC = Sort.by(Sort.Direction.ASC, "username");
 
     public AppUserServiceImpl(AppUserRepository appUserRepository, SecretHasher secretHasher) {
         this.appUserRepository = appUserRepository;
