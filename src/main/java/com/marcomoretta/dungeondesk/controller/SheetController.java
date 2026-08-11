@@ -6,14 +6,16 @@ import com.marcomoretta.dungeondesk.domain.dto.SheetDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.SheetRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.GenericSheet;
 import com.marcomoretta.dungeondesk.domain.request.SheetRequest;
+import com.marcomoretta.dungeondesk.event.GameEventStream;
+import com.marcomoretta.dungeondesk.event.SheetChangedEvent;
 import com.marcomoretta.dungeondesk.mapper.SheetMapper;
 import com.marcomoretta.dungeondesk.service.SheetService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -26,10 +28,12 @@ public class SheetController {
 
     private final SheetService sheetService;
     private final SheetMapper sheetMapper;
+    private final GameEventStream gameEventStream;
 
-    public SheetController(SheetService sheetService, SheetMapper sheetMapper) {
+    public SheetController(SheetService sheetService, SheetMapper sheetMapper, GameEventStream gameEventStream) {
         this.sheetService = sheetService;
         this.sheetMapper = sheetMapper;
+        this.gameEventStream = gameEventStream;
     }
 
     /**
@@ -124,6 +128,11 @@ public class SheetController {
 
         SheetRequest request = sheetMapper.fromDto(dto, sheetId, authSession.userId());
         GenericSheet sheet = sheetService.updateSheet(request, authSession);
+
+        // Sends the event to the observers to update the hp on the GUI of all participants
+        gameEventStream.notifyObservers(
+                new SheetChangedEvent(authSession.displayName(), sheet.getSheetId(), request.currentHp(), Instant.now())
+        );
 
         return ResponseEntity.ok(sheetMapper.toDto(sheet));
     }
