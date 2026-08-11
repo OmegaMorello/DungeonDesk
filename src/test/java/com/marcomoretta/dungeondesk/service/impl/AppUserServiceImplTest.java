@@ -14,10 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,42 +36,6 @@ class AppUserServiceImplTest {
     @Captor
     ArgumentCaptor<Sort> sortCaptor = ArgumentCaptor.forClass(Sort.class);
 
-    @Test
-    void getAllUsers() {
-        // Arrange
-        AppUser firstUser = AppUser.builder()
-                .username("first")
-                .hashSecret("first-secret")
-                .build();
-        AppUser secondUser = AppUser.builder()
-                .username("second")
-                .hashSecret("second-secret")
-                .build();
-        when(appUserRepository.findAll(any(Sort.class))).thenReturn(List.of(firstUser, secondUser));
-
-        // Act
-        List<AppUser> appUserList = appUserServiceImpl.getAllUsers();
-
-        // Assert
-        assertEquals(2, appUserList.size());
-        assertEquals(firstUser.getUsername(), appUserList.getFirst().getUsername());
-        assertEquals(secondUser.getUsername(), appUserList.getLast().getUsername());
-        verify(appUserRepository).findAll(sortCaptor.capture());
-        assertEquals(Sort.by(Sort.Direction.ASC, "name"), sortCaptor.getValue());
-    }
-
-    @Test
-    void getAllUsersWithEmptyDatabase() {
-        // Arrange
-        when(appUserRepository.findAll(any(Sort.class))).thenReturn(List.of());
-
-        // Act
-        List<AppUser> appUserList = appUserServiceImpl.getAllUsers();
-
-        // Assert
-        assertNotNull(appUserList);
-        assertTrue(appUserList.isEmpty());
-    }
 
     @Test
     void createUser() throws DuplicateUsernameException {

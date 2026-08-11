@@ -4,8 +4,6 @@ import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 
-import java.util.List;
-
 /**
  * Interface that defines the App User Service
  */
@@ -26,12 +24,6 @@ public interface AppUserService {
      */
     AppUser getUser(Long userId);
 
-    /**
-     * Gets the list of all users
-     *
-     * @return List containing all the non-sensitive users information
-     */
-    List<AppUser> getAllUsers();
 
     /**
      * Updates a User

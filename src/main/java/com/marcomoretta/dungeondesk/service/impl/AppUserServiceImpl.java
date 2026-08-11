@@ -13,8 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * Serves the AppUser controller
  */
@@ -50,12 +48,6 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserRepository
                 .findById(userId)
                 .orElseThrow(() -> new AppUserNotFoundException("User not found: " + userId));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<AppUser> getAllUsers() {
-        return appUserRepository.findAll(BY_USERNAME_ASC);
     }
 
     @Override
