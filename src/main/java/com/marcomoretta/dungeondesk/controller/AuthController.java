@@ -120,7 +120,7 @@ public class AuthController {
 
     /**
      * Requests the roster of the running session, so a player can pick their name.
-     * TODO: hide the players already connected once the claim is made thread safe.
+     * TODO: hide the players already connected
      *
      * @return The available names, empty list when no session is running [200 - OK]
      */

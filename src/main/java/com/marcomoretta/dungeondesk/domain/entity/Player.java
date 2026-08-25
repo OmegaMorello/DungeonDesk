@@ -37,13 +37,6 @@ public class Player {
     @ToString.Exclude
     private Campaign campaign;
 
-    //TODO: implement CharSheet class
-//    @ManyToMany
-//    @JoinColumn(name = "char_sheet_id")
-//    @ToString.Exclude
-//    @Builder.Default
-//    private List<CharSheet> charSheets = new ArrayList<>()
-
     @PrePersist
     @PreUpdate
     private void computeNormalizedName() {
