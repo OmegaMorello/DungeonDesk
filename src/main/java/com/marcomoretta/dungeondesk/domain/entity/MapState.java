@@ -37,8 +37,15 @@ public class MapState {
     @Builder.Default
     private int gridColumns = 1;
 
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "campaign_id", nullable = false, unique = true)
+    @ToString.Exclude
+    private Campaign campaign;
+
     @Builder.Default
     private String backgroundUrl = "";
+
+    private String backgroundContentType;
 
     @OneToMany(mappedBy = "mapState", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
