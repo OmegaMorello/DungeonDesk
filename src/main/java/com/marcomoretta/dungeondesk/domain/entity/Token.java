@@ -42,9 +42,9 @@ public class Token {
     @Column(nullable = false)
     private TokenType type;
 
-    //TODO: implement CharSheet
-//    @OneToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "char_sheet", nullable = false)
-//    @ToString.Exclude
-//    private CharSheet charSheet;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sheet_id", nullable = false, unique = true)
+    @ToString.Exclude
+    private GenericSheet sheet;
 }
