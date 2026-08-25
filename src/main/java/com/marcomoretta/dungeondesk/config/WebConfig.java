@@ -6,8 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Web Configuration that handles:
- * - Interceptors
+ * Web Configuration
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -17,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
     public WebConfig(AuthInterceptor authInterceptor) {
         this.authInterceptor = authInterceptor;
     }
-
     /**
      * Add auth interceptors only on specified paths
      * In example, during login and registration phases, the requests do not have to be intercepted since the user is not logged in yet
