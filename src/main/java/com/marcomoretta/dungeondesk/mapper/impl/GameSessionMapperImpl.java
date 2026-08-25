@@ -47,6 +47,13 @@ public class GameSessionMapperImpl implements GameSessionMapper {
     }
 
     @Override
+    public List<GameSessionDto> toDtoList(List<GameSession> gameSessionList) {
+        return gameSessionList.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
     public List<SessionPlayerDto> toSessionPlayerDtoList(List<Player> playerList) {
         return playerList.stream()
                 .map(player -> new SessionPlayerDto(player.getName()))

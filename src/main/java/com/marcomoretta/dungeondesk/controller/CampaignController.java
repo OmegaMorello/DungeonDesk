@@ -3,6 +3,7 @@ package com.marcomoretta.dungeondesk.controller;
 import com.marcomoretta.dungeondesk.auth.AuthInterceptor;
 import com.marcomoretta.dungeondesk.auth.AuthSession;
 import com.marcomoretta.dungeondesk.domain.dto.CampaignDto;
+import com.marcomoretta.dungeondesk.domain.dto.CampaignExportDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.UpdateCampaignRequestDto;
@@ -13,6 +14,7 @@ import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 import com.marcomoretta.dungeondesk.mapper.CampaignMapper;
 import com.marcomoretta.dungeondesk.service.CampaignService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,6 +84,26 @@ public class CampaignController {
                 .created(URI.create("/api/v1/campaigns/" + campaignDto.id()))
                 .body(campaignDto); //TODO: Check warning
     }
+
+
+    @GetMapping("/{campaignId}/export")
+    public ResponseEntity<CampaignExportDto> exportCampaign(
+            @PathVariable Long campaignId,
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
+
+        CampaignExportDto campaignExportDto = campaignMapper.toExportDto(campaignService.exportCampaign(
+                campaignId, authSession.userId()
+        ));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"campaign-" + campaignId + ".json\"")
+                .body(campaignExportDto);
+
+    }
+
 
     /**
      * Request to delete an owned campaign
