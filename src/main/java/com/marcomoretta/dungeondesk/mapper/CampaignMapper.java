@@ -1,6 +1,8 @@
 package com.marcomoretta.dungeondesk.mapper;
 
+import com.marcomoretta.dungeondesk.domain.CampaignExport;
 import com.marcomoretta.dungeondesk.domain.dto.CampaignDto;
+import com.marcomoretta.dungeondesk.domain.dto.CampaignExportDto;
 import com.marcomoretta.dungeondesk.domain.dto.PlayerDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
@@ -57,6 +59,9 @@ public interface CampaignMapper {
      * @return Presentation layer campaign list dto
      */
     List<CampaignDto> toDtoList(List<Campaign> campaignList);
+
+    CampaignExportDto toExportDto(CampaignExport campaignExport);
+
 
     /**
      * Maps a player to a dto

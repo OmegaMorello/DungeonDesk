@@ -1,5 +1,6 @@
 package com.marcomoretta.dungeondesk.service;
 
+import com.marcomoretta.dungeondesk.domain.CampaignExport;
 import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
@@ -48,7 +49,7 @@ public interface CampaignService {
      *
      * @return Exported Campaign
      */
-    Campaign exportCampaign(Long id);
+    CampaignExport exportCampaign(Long campaignId, Long requesterId);
 
     /**
      * Updates campaign information such as name and secret

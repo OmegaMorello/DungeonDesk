@@ -42,6 +42,8 @@ public interface GameSessionMapper {
      */
     GameSessionDto toDto(GameSession gameSession);
 
+    List<GameSessionDto> toDtoList(List<GameSession> gameSessionList);
+
     /**
      * Maps the roster to the public dto
      *
