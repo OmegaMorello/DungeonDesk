@@ -21,7 +21,6 @@ export function AuthProvider({ children }) {
 
   // --- Bootstrap: restore an existing session on first load if the token exists ----
   useEffect(() => {
-    if (!localStorage.getItem("token")) return;
 
     api
       .getMe()

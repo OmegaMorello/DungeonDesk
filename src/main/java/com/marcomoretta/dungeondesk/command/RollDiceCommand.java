@@ -6,6 +6,9 @@ import com.marcomoretta.dungeondesk.event.GameEvent;
 import java.time.Instant;
 import java.util.Random;
 
+/**
+ * Command to roll dice and publish the result in the session chat
+ */
 public class RollDiceCommand implements Command{
     private final String senderName;
     private final DiceType diceType;

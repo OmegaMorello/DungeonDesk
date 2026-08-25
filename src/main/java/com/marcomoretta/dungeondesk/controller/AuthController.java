@@ -5,7 +5,6 @@ import com.marcomoretta.dungeondesk.auth.AuthSession;
 import com.marcomoretta.dungeondesk.auth.SessionStore;
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
 import com.marcomoretta.dungeondesk.domain.dto.AuthSessionDto;
-import com.marcomoretta.dungeondesk.domain.dto.SessionInfoDto;
 import com.marcomoretta.dungeondesk.domain.dto.SessionPlayerDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.LoginRequestDto;
@@ -19,7 +18,9 @@ import com.marcomoretta.dungeondesk.service.AppUserService;
 import com.marcomoretta.dungeondesk.service.AuthService;
 import com.marcomoretta.dungeondesk.service.GameSessionService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,19 +75,25 @@ public class AuthController {
      * @return The successfully created session [200 - OK]
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthSessionDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<AuthSessionDto> login(
+            @Valid @RequestBody LoginRequestDto loginRequestDto) {
+
         AuthSession authSession = authService.login(
                 loginRequestDto.loginType(),
                 loginRequestDto.username(),
                 loginRequestDto.secret());
 
-        return ResponseEntity.ok(authMapper.toDto(authSession));
+        ResponseCookie responseCookie = cookieBuilder(authSession.token())
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(authMapper.toDto(authSession));
     }
 
     /**
      * Requests to log out a user, destroying its session
      *
-     * @param authSession The session previously created
      * @return A void response if the user was correctly found and logged out [204 - NO CONTENT]
      */
     @PostMapping("/logout")
@@ -94,14 +101,21 @@ public class AuthController {
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
         sessionStore.remove(authSession.token());
-        return ResponseEntity.noContent().build();
+
+        ResponseCookie responseCookie = cookieBuilder("")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<SessionInfoDto> me(
+    public ResponseEntity<AuthSessionDto> me(
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
-        return ResponseEntity.ok(authMapper.toSessionInfoDto(authSession));
+        return ResponseEntity.ok(authMapper.toDto(authSession));
     }
 
     /**
@@ -116,5 +130,19 @@ public class AuthController {
         List<Player> roster = gameSessionService.getActiveSessionRoster();
 
         return ResponseEntity.ok(gameSessionMapper.toSessionPlayerDtoList(roster));
+    }
+
+
+    /**
+     * Partial builder for the cookie
+     *
+     * @param value The value to assign
+     * @return The partial cookie builder, to be completed by its caller
+     */
+    private ResponseCookie.ResponseCookieBuilder cookieBuilder(String value) {
+        return ResponseCookie.from(AuthInterceptor.COOKIE_NAME, value)
+                .httpOnly(true)
+                .sameSite("Strict")
+                .path("/");
     }
 }
