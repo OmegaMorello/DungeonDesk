@@ -4,6 +4,7 @@ import com.marcomoretta.dungeondesk.domain.entity.Ability;
 import com.marcomoretta.dungeondesk.domain.entity.Skill;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public record SheetRequestDto(
         @NotBlank(message = EMPTY_NAME)
         @Size(max = 255, message = NAME_TOO_LONG)
         String name,
+
+        @NotNull(message = "Campaign is required")
+        Long campaignId,
 
         int armorClass,
         int maxHp,

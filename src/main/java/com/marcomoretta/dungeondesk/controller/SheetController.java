@@ -3,6 +3,7 @@ package com.marcomoretta.dungeondesk.controller;
 import com.marcomoretta.dungeondesk.auth.AuthInterceptor;
 import com.marcomoretta.dungeondesk.auth.AuthSession;
 import com.marcomoretta.dungeondesk.domain.dto.SheetDto;
+import com.marcomoretta.dungeondesk.domain.dto.SheetSummaryDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.SheetRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.GenericSheet;
 import com.marcomoretta.dungeondesk.domain.request.SheetRequest;
@@ -82,6 +83,21 @@ public class SheetController {
                 .body(created);
     }
 
+
+    /**
+     * Requests all sheets summary for main page view
+     *
+     * @param authSession The client active session
+     * @return The sheet list [200 - OK]
+     */
+    @GetMapping("/session")
+    public ResponseEntity<List<SheetSummaryDto>> getSheetsSummary(
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        return ResponseEntity.ok(sheetMapper.toSummaryDtoList(sheetService.getCampaignSheets(authSession)));
+    }
+
+
     /**
      * Requests a sheet by its id
      *
@@ -123,15 +139,21 @@ public class SheetController {
     @PutMapping("/{sheetId}")
     public ResponseEntity<SheetDto> updateSheet(
             @PathVariable Long sheetId,
-            @Valid @RequestBody SheetRequestDto dto,
+            @Valid @RequestBody SheetRequestDto sheetRequestDto,
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
-        SheetRequest request = sheetMapper.fromDto(dto, sheetId, authSession.userId());
+        SheetRequest request = sheetMapper.fromDto(sheetRequestDto, sheetId, authSession.userId());
         GenericSheet sheet = sheetService.updateSheet(request, authSession);
 
         // Sends the event to the observers to update the hp on the GUI of all participants
         gameEventStream.notifyObservers(
-                new SheetChangedEvent(authSession.displayName(), sheet.getSheetId(), request.currentHp(), Instant.now())
+                new SheetChangedEvent(
+                        authSession.displayName(),
+                        sheet.getSheetId(),
+                        sheet.getName(),
+                        request.currentHp(),
+                        sheet.getMaxHp(),
+                        Instant.now())
         );
 
         return ResponseEntity.ok(sheetMapper.toDto(sheet));

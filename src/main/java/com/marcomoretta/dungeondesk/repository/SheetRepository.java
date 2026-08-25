@@ -32,4 +32,13 @@ public interface SheetRepository extends JpaRepository<GenericSheet, Long> {
             "attacks", "spellSlots",
             "skillProficiencies", "skillExpertise", "savingThrowProficiencies"})
     List<GenericSheet> findByOwner_UserIdOrderByNameAsc(Long ownerId);
+
+
+    /**
+     * Every sheet in a campaign
+     *
+     * @param campaignId The id of the campaign
+     * @return The complete list of sheets in the campaign
+     */
+    List<GenericSheet> findByCampaign_CampaignIdOrderByNameAsc(Long campaignId);
 }

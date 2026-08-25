@@ -35,6 +35,12 @@ public abstract class GenericSheet {
     @ToString.Exclude
     private AppUser owner;
 
+    // The campaign the sheet may belong to
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "campaign_id", nullable = false)
+    @ToString.Exclude
+    private Campaign campaign;
+
     @Column(nullable = false)
     private String name;
 

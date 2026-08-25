@@ -2,6 +2,7 @@ package com.marcomoretta.dungeondesk.mapper.impl;
 
 import com.marcomoretta.dungeondesk.domain.dto.AttackDto;
 import com.marcomoretta.dungeondesk.domain.dto.SheetDto;
+import com.marcomoretta.dungeondesk.domain.dto.SheetSummaryDto;
 import com.marcomoretta.dungeondesk.domain.dto.SpellSlotDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.SheetRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.*;
@@ -23,6 +24,7 @@ public class SheetMapperImpl implements SheetMapper {
         return new SheetRequest(
                 sheetId,
                 ownerId,
+                dto.campaignId(),
                 dto.name(),
                 dto.armorClass(), dto.maxHp(), dto.currentHp(), dto.speed(),
                 dto.strength(), dto.dexterity(), dto.constitution(),
@@ -121,6 +123,35 @@ public class SheetMapperImpl implements SheetMapper {
     @Override
     public List<SheetDto> toDtoList(List<GenericSheet> sheetList) {
         return sheetList.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public SheetSummaryDto toSummaryDto(GenericSheet sheet) {
+        SheetSummaryDto.SheetSummaryDtoBuilder builder = SheetSummaryDto.builder()
+                .sheetId(sheet.getSheetId())
+                .name(sheet.getName())
+                .currentHp(sheet.getCurrentHp())
+                .maxHp(sheet.getMaxHp());
+
+        if (sheet instanceof CharacterSheet) {
+            builder
+                    .sheetType(CharacterSheet.class.getSimpleName())
+                    .playerId(((CharacterSheet) sheet).getPlayer() == null ? null : ((CharacterSheet) sheet).getPlayer().getPlayerId())
+                    .characterClass(((CharacterSheet) sheet).getCharacterClass())
+                    .species(((CharacterSheet) sheet).getSpecies());
+        }
+
+        if (sheet instanceof EnemySheet) {
+            builder
+                    .sheetType(EnemySheet.class.getSimpleName());
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public List<SheetSummaryDto> toSummaryDtoList(List<GenericSheet> sheetList) {
+        return sheetList.stream().map(this::toSummaryDto).toList();
     }
 
     // Converts the spells to a list DTO for easier usage
