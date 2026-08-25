@@ -18,7 +18,7 @@ class ObservableTest {
         TestObserver observer = new TestObserver();
         observable.attach(observer);
 
-        ChatEvent event = new ChatEvent("Omega", "Roll you dice!", Instant.now());
+        ChatEvent event = new ChatEvent("Omega", "tester", "Roll you dice!", Instant.now());
 
         // Act
         observable.notifyObservers(event);
@@ -56,7 +56,7 @@ class ObservableTest {
         TestObserver observer = new TestObserver();
         observable.attach(observer);
 
-        SheetChangedEvent event1 = new SheetChangedEvent("Omega", 1L, 15, Instant.now());
+        SheetChangedEvent event1 = new SheetChangedEvent("Omega", 1L, "name", 15, 30, Instant.now());
         TokenMovedEvent event2 = new TokenMovedEvent("Omega", 1L,5,10, Instant.now());
 
         // Act
@@ -78,7 +78,7 @@ class ObservableTest {
         observable.attach(failingObserver);
         observable.attach(observer);
 
-        ChatEvent event = new ChatEvent("Omega", "Anybody there?", Instant.now());
+        ChatEvent event = new ChatEvent("Omega", "you", "Anybody there?", Instant.now());
 
         // Act
         observable.notifyObservers(event);
@@ -96,7 +96,7 @@ class ObservableTest {
         observable.attach(observer);
         observable.detach(observer);
 
-        ChatEvent event = new ChatEvent("Omega", "Anybody there?", Instant.now());
+        ChatEvent event = new ChatEvent("Omega", "you", "Anybody there?", Instant.now());
 
         // Act and Assert
         assertDoesNotThrow(() -> observable.notifyObservers(event));
