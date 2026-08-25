@@ -1,6 +1,8 @@
 package com.marcomoretta.dungeondesk.mapper.impl;
 
+import com.marcomoretta.dungeondesk.domain.CampaignExport;
 import com.marcomoretta.dungeondesk.domain.dto.CampaignDto;
+import com.marcomoretta.dungeondesk.domain.dto.CampaignExportDto;
 import com.marcomoretta.dungeondesk.domain.dto.PlayerDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
@@ -11,6 +13,9 @@ import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 import com.marcomoretta.dungeondesk.mapper.CampaignMapper;
+import com.marcomoretta.dungeondesk.mapper.GameSessionMapper;
+import com.marcomoretta.dungeondesk.mapper.NoteMapper;
+import com.marcomoretta.dungeondesk.mapper.SheetMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,6 +25,16 @@ import java.util.List;
  */
 @Component
 public class CampaignMapperImpl implements CampaignMapper {
+    private final NoteMapper noteMapper;
+    private final GameSessionMapper gameSessionMapper;
+    private final SheetMapper sheetMapper;
+
+    public CampaignMapperImpl(NoteMapper noteMapper, GameSessionMapper gameSessionMapper, SheetMapper sheetMapper) {
+        this.noteMapper = noteMapper;
+        this.gameSessionMapper = gameSessionMapper;
+        this.sheetMapper = sheetMapper;
+    }
+
     @Override
     public CreateCampaignRequest fromCreateDto(CreateCampaignRequestDto dto, Long ownerId) {
         return new CreateCampaignRequest(
@@ -61,6 +76,17 @@ public class CampaignMapperImpl implements CampaignMapper {
     @Override
     public List<CampaignDto> toDtoList(List<Campaign> campaignList) {
         return campaignList.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public CampaignExportDto toExportDto(CampaignExport campaignExport) {
+        return new CampaignExportDto(
+                toDto(campaignExport.campaign()),
+                noteMapper.toDtoList(campaignExport.notes()),
+                gameSessionMapper.toDtoList(campaignExport.gameSessions()),
+                toPlayerDtoList(campaignExport.campaign().getPlayers()),
+                sheetMapper.toDtoList(campaignExport.sheets())
+        );
     }
 
     @Override

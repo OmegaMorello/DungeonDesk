@@ -1,5 +1,6 @@
 package com.marcomoretta.dungeondesk.service.impl;
 
+import com.marcomoretta.dungeondesk.domain.CampaignExport;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.entity.Player;
@@ -8,6 +9,9 @@ import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 import com.marcomoretta.dungeondesk.exception.*;
 import com.marcomoretta.dungeondesk.repository.CampaignRepository;
+import com.marcomoretta.dungeondesk.repository.GameSessionRepository;
+import com.marcomoretta.dungeondesk.repository.NoteRepository;
+import com.marcomoretta.dungeondesk.repository.SheetRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
 import com.marcomoretta.dungeondesk.service.CampaignService;
 import org.springframework.stereotype.Service;
@@ -22,10 +26,16 @@ import java.util.List;
 public class CampaignServiceImpl implements CampaignService {
 
     private final CampaignRepository campaignRepository;
+    private final NoteRepository noteRepository;
+    private final GameSessionRepository gameSessionRepository;
+    private final SheetRepository sheetRepository;
     private final AppUserService appUserService;
 
-    public CampaignServiceImpl(CampaignRepository campaignRepository, AppUserService appUserService) {
+    public CampaignServiceImpl(CampaignRepository campaignRepository, NoteRepository noteRepository, GameSessionRepository gameSessionRepository, SheetRepository sheetRepository, AppUserService appUserService) {
         this.campaignRepository = campaignRepository;
+        this.noteRepository = noteRepository;
+        this.gameSessionRepository = gameSessionRepository;
+        this.sheetRepository = sheetRepository;
         this.appUserService = appUserService;
     }
 
@@ -67,10 +77,18 @@ public class CampaignServiceImpl implements CampaignService {
         campaignRepository.delete(campaign);
     }
 
-    //TODO: Missing implementation
     @Override
-    public Campaign exportCampaign(Long id) {
-        return null;
+    @Transactional(readOnly = true)
+    public CampaignExport exportCampaign(Long campaignId, Long requesterId) {
+        Campaign campaign = getCampaign(campaignId);
+        checkPermission(campaign, requesterId);
+
+        return new CampaignExport(
+                campaign,
+                noteRepository.findByCampaign_CampaignIdOrderByCreatedAsc(campaignId),
+                gameSessionRepository.findByCampaign_CampaignIdOrderByStartDateAsc(campaignId),
+                sheetRepository.findByCampaign_CampaignIdOrderByNameAsc(campaignId)
+        );
     }
 
     @Override
