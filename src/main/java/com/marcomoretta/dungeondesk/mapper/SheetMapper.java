@@ -1,6 +1,7 @@
 package com.marcomoretta.dungeondesk.mapper;
 
 import com.marcomoretta.dungeondesk.domain.dto.SheetDto;
+import com.marcomoretta.dungeondesk.domain.dto.SheetSummaryDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.SheetRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.GenericSheet;
 import com.marcomoretta.dungeondesk.domain.request.SheetRequest;
@@ -37,4 +38,22 @@ public interface SheetMapper {
      * @return Presentation layer sheet dto list
      */
     List<SheetDto> toDtoList(List<GenericSheet> sheetList);
+
+
+    /**
+     * Maps a sheet summary to a dto
+     *
+     * @param sheet Service layer sheet, either kind
+     * @return Presentation layer sheet dto
+     */
+    SheetSummaryDto toSummaryDto(GenericSheet sheet);
+
+
+    /**
+     * Maps a sheet summary list to a dto list
+     *
+     * @param sheetList Service layer sheet summary list
+     * @return Presentation layer sheet summary dto list
+     */
+    List<SheetSummaryDto> toSummaryDtoList(List<GenericSheet> sheetList);
 }

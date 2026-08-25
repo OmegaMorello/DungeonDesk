@@ -32,6 +32,14 @@ public interface SheetService {
     GenericSheet createEnemySheet(SheetRequest request, AuthSession session);
 
     /**
+     * Reads the sheets of the current campaign
+     *
+     * @param session The caller session
+     * @return The sheet
+     */
+    List<GenericSheet> getCampaignSheets(AuthSession session);
+
+    /**
      * Reads a sheet of either kind
      *
      * @param sheetId The sheet to read

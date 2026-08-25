@@ -17,7 +17,8 @@ import java.util.Set;
 public record SheetRequest(
         Long sheetId,
         Long ownerId,
-String name,
+        Long campaignId,
+        String name,
         int armorClass,
         int maxHp,
         int currentHp,
@@ -36,6 +37,7 @@ String name,
         List<SpellSlot> spellSlots,
         List<Attack> attacks,
         String notes,
+
         // CHARACTER only
         Long playerId,
         Integer level,
@@ -48,6 +50,7 @@ String name,
         Integer deathSaveFailures,
         Integer exhaustion,
         Boolean inspiration,
+
         // ENEMY only
         String challengeRating,
         String creatureType,

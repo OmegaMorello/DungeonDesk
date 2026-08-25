@@ -2,14 +2,20 @@ package com.marcomoretta.dungeondesk.service.impl;
 
 import com.marcomoretta.dungeondesk.auth.AuthSession;
 import com.marcomoretta.dungeondesk.auth.LoginType;
-import com.marcomoretta.dungeondesk.domain.entity.*;
+import com.marcomoretta.dungeondesk.domain.entity.CharacterSheet;
+import com.marcomoretta.dungeondesk.domain.entity.EnemySheet;
+import com.marcomoretta.dungeondesk.domain.entity.GenericSheet;
+import com.marcomoretta.dungeondesk.domain.entity.Player;
 import com.marcomoretta.dungeondesk.domain.request.SheetRequest;
 import com.marcomoretta.dungeondesk.exception.PlayerNotFoundException;
 import com.marcomoretta.dungeondesk.exception.SheetNotFoundException;
 import com.marcomoretta.dungeondesk.exception.SheetPermissionException;
+import com.marcomoretta.dungeondesk.repository.CampaignRepository;
 import com.marcomoretta.dungeondesk.repository.PlayerRepository;
 import com.marcomoretta.dungeondesk.repository.SheetRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
+import com.marcomoretta.dungeondesk.service.CampaignService;
+import com.marcomoretta.dungeondesk.service.GameSessionService;
 import com.marcomoretta.dungeondesk.service.SheetService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +31,20 @@ public class SheetServiceImpl implements SheetService {
 
     private final SheetRepository sheetRepository;
     private final PlayerRepository playerRepository;
+    private final CampaignRepository campaignRepository;
     private final AppUserService appUserService;
+    private final CampaignService campaignService;
+    private final GameSessionService gameSessionService;
 
     public SheetServiceImpl(SheetRepository sheetRepository,
-                            PlayerRepository playerRepository,
-                            AppUserService appUserService) {
+                            PlayerRepository playerRepository, CampaignRepository campaignRepository,
+                            AppUserService appUserService, CampaignService campaignService, GameSessionService gameSessionService) {
         this.sheetRepository = sheetRepository;
         this.playerRepository = playerRepository;
+        this.campaignRepository = campaignRepository;
         this.appUserService = appUserService;
+        this.campaignService = campaignService;
+        this.gameSessionService = gameSessionService;
     }
 
     @Override
@@ -53,6 +65,25 @@ public class SheetServiceImpl implements SheetService {
         applyEnemy(sheet, request);
 
         return sheetRepository.save(sheet);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GenericSheet> getCampaignSheets(AuthSession session) {
+        Long campaignId = session.loginType() == LoginType.MASTER
+                ? gameSessionService.getActiveSession()
+                    .map((gameSession -> gameSession.getCampaign().getCampaignId()))
+                    .orElse(null)
+                : session.campaignId();
+
+        if (campaignId == null) return List.of();
+
+        List<GenericSheet> sheetList = sheetRepository.findByCampaign_CampaignIdOrderByNameAsc(campaignId);
+
+        if (session.loginType() == LoginType.MASTER) return sheetList;
+
+        return sheetList.stream().filter(CharacterSheet.class::isInstance).toList();
+
     }
 
     @Override
@@ -104,15 +135,21 @@ public class SheetServiceImpl implements SheetService {
             throw new SheetPermissionException("Only the owner of the sheet can manage it");
     }
 
-    // A master reads their own library, a player only the sheet assigned to them (just for now)
+    // A master reads their own library, a player only the players sheets in its own campaign
     private void checkCanRead(GenericSheet sheet, AuthSession session) {
         if (session.loginType() == LoginType.MASTER) {
             checkIsOwner(sheet, session);
-            return;
-        }
-        //TODO: players should be able to read all characters sheets in their same session
-        if (!isOwnCharacterSheet(sheet, session))
-            throw new SheetPermissionException("You can only read your own character sheet");
+        } else if (session.loginType() == LoginType.PLAYER && sheet instanceof CharacterSheet characterSheet) {
+            checkIsInSameCampaign(characterSheet, session);
+        } else throw new SheetPermissionException("You do not have the permission to read this sheet!");
+    }
+
+    // Checks if the player is in the same campaign of the requested sheet
+    private void checkIsInSameCampaign(CharacterSheet characterSheet, AuthSession session) {
+        if (characterSheet.getPlayer() != null
+                && !characterSheet.getPlayer().getCampaign().getCampaignId().equals(session.campaignId()))
+
+            throw new SheetPermissionException("You cannot read sheets from other campaigns");
     }
 
     // A player edits their own sheet during play
@@ -134,6 +171,7 @@ public class SheetServiceImpl implements SheetService {
     //TODO: Understand how to user builder instead
     private void applyCommon(GenericSheet sheet, SheetRequest request, AuthSession session) {
         if (sheet.getOwner() == null) sheet.setOwner(appUserService.getUser(session.userId()));
+        if (sheet.getCampaign() == null) sheet.setCampaign(campaignService.getCampaign(request.campaignId()));
 
         sheet.setName(request.name());
         sheet.setArmorClass(request.armorClass());
