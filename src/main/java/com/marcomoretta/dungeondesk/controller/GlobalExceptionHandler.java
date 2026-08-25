@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
      * Handles the attempt to create a user with an already existing username.
      *
      * @param ex the exception raised by the service
-     * @return the error message and a 409 Conflict
+     * @return the error message and a 409 - CONFLICT
      */
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorDto> handleDuplicateResource(DuplicateResourceException ex) {
@@ -47,32 +47,64 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 
-    //TODO: Javadoc
+    /**
+     * Handles a request for an entity that does not exist
+     *
+     * @param ex the exception raised by the service
+     * @return the error message and a 404 - NOT FOUND
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDto> handleResourceNotFound(ResourceNotFoundException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
-    //TODO: Javadoc
+    /**
+     * Handles a request a caller has no permission for
+     *
+     * @param ex the exception raised by the service
+     * @return the error message and a 403 - FORBIDDEN
+     */
     @ExceptionHandler(ResourcePermissionException.class)
     public ResponseEntity<ErrorDto> handleResourcePermission(ResourcePermissionException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
     }
 
-    //TODO: Javadoc
+    /**
+     * Handles a login attempt with wrong credentials
+     *
+     * @param ex the exception raised by the authentication strategy
+     * @return the error message and a 401 - NOT AUTHORIZED
+     */
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorDto> handleInvalidCredentials(InvalidCredentialsException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
-    //TODO: Javadoc
+    /**
+     * Handles a request without a valid session cookie
+     *
+     * @param ex the exception raised by the service
+     * @return the error message and a 401 - NOT AUTHORIZED
+     */
     @ExceptionHandler(UnauthenticatedException.class)
     public ResponseEntity<ErrorDto> handleUnauthenticated(UnauthenticatedException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Handles the upload of an unaccepted file type
+     *
+     * @param ex the exception raised by the service
+     * @return the error message and a 400 - BAD REQUEST
+     */
+    @ExceptionHandler(MapImageException.class)
+    public ResponseEntity<ErrorDto> handleMapImage(MapImageException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
     /**
