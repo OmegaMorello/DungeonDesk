@@ -84,7 +84,7 @@ public class MapController {
      *
      * @param createTokenRequestDto The sheet the token belongs to, the type of token and its position
      * @param authSession           The actual session
-     * @return The created token [200 - OK]
+     * @return The created token [201 - CREATED]
      */
     @PostMapping("/tokens")
     public ResponseEntity<TokenDto> addToken(
@@ -165,8 +165,8 @@ public class MapController {
      * @return A void response when stored [204 - NO CONTENT]
      */
     @PostMapping("/background")
-    public ResponseEntity<Void> uploadBackground(
-            @RequestParam("file") MultipartFile mapFile,
+    public ResponseEntity<Void> uploadMapBackground(
+            @RequestParam("mapFile") MultipartFile mapFile,
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
         authSession.requireMaster();

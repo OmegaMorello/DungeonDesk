@@ -36,16 +36,6 @@ public class CampaignController {
         this.campaignMapper = campaignMapper;
     }
 
-    /**
-     * Requests a specified campaign by its id
-     *
-     * @param id The requested campaign id
-     * @return Status 200 with the campaign dto
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<CampaignDto> getCampaign(@PathVariable Long id) {
-        return ResponseEntity.ok(campaignMapper.toDto(campaignService.getCampaign(id)));
-    }
 
     /**
      * Request the owner's campaign list
@@ -62,6 +52,19 @@ public class CampaignController {
 
         return ResponseEntity.ok(campaignDto);
     }
+
+
+    /**
+     * Requests a specified campaign by its id
+     *
+     * @param id The requested campaign id
+     * @return Status 200 with the campaign dto
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<CampaignDto> getCampaign(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignMapper.toDto(campaignService.getCampaign(id)));
+    }
+
 
     /**
      * Request to create a campaign
@@ -86,22 +89,24 @@ public class CampaignController {
     }
 
 
-    @GetMapping("/{campaignId}/export")
-    public ResponseEntity<CampaignExportDto> exportCampaign(
-            @PathVariable Long campaignId,
-            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+    /**
+     * Request to update an owned campaign
+     *
+     * @param campaignId               The id of the campaign to update
+     * @param updateCampaignRequestDto The update request details
+     * @param authSession              The active client session
+     * @return The successfully updated campaign [200 - OK]
+     */
+    @PutMapping("/{campaignId}")
+    public ResponseEntity<CampaignDto> updateCampaign(@PathVariable Long campaignId,
+                                                      @Valid @RequestBody UpdateCampaignRequestDto updateCampaignRequestDto,
+                                                      @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
         authSession.requireMaster();
+        UpdateCampaignRequest updateCampaignRequest = campaignMapper.fromUpdateDto(updateCampaignRequestDto, campaignId);
+        Campaign campaign = campaignService.updateCampaign(updateCampaignRequest, authSession.userId());
 
-        CampaignExportDto campaignExportDto = campaignMapper.toExportDto(campaignService.exportCampaign(
-                campaignId, authSession.userId()
-        ));
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"campaign-" + campaignId + ".json\"")
-                .body(campaignExportDto);
-
+        return ResponseEntity.ok(campaignMapper.toDto(campaign));
     }
 
 
@@ -122,25 +127,6 @@ public class CampaignController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Request to update an owned campaign
-     *
-     * @param campaignId               The id of the campaign to update
-     * @param updateCampaignRequestDto The update request details
-     * @param authSession              The active client session
-     * @return The successfully updated campaign [200 - OK]
-     */
-    @PutMapping("/{campaignId}")
-    public ResponseEntity<CampaignDto> updateCampaign(@PathVariable Long campaignId,
-                                                      @Valid @RequestBody UpdateCampaignRequestDto updateCampaignRequestDto,
-                                                      @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
-
-        authSession.requireMaster();
-        UpdateCampaignRequest updateCampaignRequest = campaignMapper.fromUpdateDto(updateCampaignRequestDto, campaignId);
-        Campaign campaign = campaignService.updateCampaign(updateCampaignRequest, authSession.userId());
-
-        return ResponseEntity.ok(campaignMapper.toDto(campaign));
-    }
 
     /**
      * Request to add a player to a campaign
@@ -162,6 +148,7 @@ public class CampaignController {
         return ResponseEntity.ok(campaignMapper.toDto(campaign));
     }
 
+
     /**
      * Request to remove a player from a campaign
      *
@@ -179,6 +166,32 @@ public class CampaignController {
         Campaign campaign = campaignService.removePlayer(campaignId, playerId, authSession.userId());
 
         return ResponseEntity.ok(campaignMapper.toDto(campaign));
+    }
+
+
+    /**
+     * Request a campaign export file
+     *
+     * @param campaignId  The campaign to export
+     * @param authSession The active client session
+     * @return The exported campaign file [200 - OK]
+     */
+    @GetMapping("/{campaignId}/export")
+    public ResponseEntity<CampaignExportDto> exportCampaign(
+            @PathVariable Long campaignId,
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
+
+        CampaignExportDto campaignExportDto = campaignMapper.toExportDto(campaignService.exportCampaign(
+                campaignId, authSession.userId()
+        ));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"campaign-" + campaignId + ".json\"")
+                .body(campaignExportDto);
+
     }
 
 }
