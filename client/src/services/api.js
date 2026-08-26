@@ -1,28 +1,41 @@
-// All calls to the backend live here, so components never write URLs directly.
+// All calls to the backend are done here
 
 // Generic helper: does the fetch and parses the JSON response.
-// Instead of using cookies, I use the custom token header for auth
 async function request(url, options = {}) {
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
+    const res = await fetch(url, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+        },
+    });
 
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || `Request failed: ${res.status}`);
-  }
-  if (res.status === 204) return null; // logout has no content
-  return res.json();
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Request failed: ${res.status}`);
+    }
+    if (res.status === 204) return null; // logout has no content
+    return res.json();
 }
 
 // First test call: the health check.
 export function getHealth() {
-  return request("/api/health");
+    return request("/api/v1/health");
 }
+
+
+
+// ---- App user --------------------------------------------------
+
+// PUT /api/v1/appusers/update -> AppUserDto
+export function updateUser({ username, secret }) {
+    return request("/api/v1/appusers/update", {
+        method: "PUT",
+        body: JSON.stringify({ username, secret }),
+    });
+}
+
+
 
 // ---- Auth ----------------------------------------------------
 
