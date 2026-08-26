@@ -112,7 +112,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<AuthSessionDto> me(
+    public ResponseEntity<AuthSessionDto> getMe(
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
         return ResponseEntity.ok(authMapper.toDto(authSession));
@@ -125,7 +125,7 @@ public class AuthController {
      * @return The available names, empty list when no session is running [200 - OK]
      */
     @GetMapping("/session/players")
-    public ResponseEntity<List<SessionPlayerDto>> getAvailablePlayers() {
+    public ResponseEntity<List<SessionPlayerDto>> getSessionPlayers() {
 
         List<Player> roster = gameSessionService.getActiveSessionRoster();
 

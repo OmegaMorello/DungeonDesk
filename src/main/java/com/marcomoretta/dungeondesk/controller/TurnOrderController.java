@@ -33,7 +33,7 @@ public class TurnOrderController {
      * @return The turn-ordered list of sheet ids [200 - OK]
      */
     @GetMapping
-    public ResponseEntity<List<Long>> getOrder(
+    public ResponseEntity<List<Long>> getTurnOrder(
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 
         return ResponseEntity.ok(turnOrderService.getOrder());
@@ -66,7 +66,7 @@ public class TurnOrderController {
      * @return The turn-ordered list of sheet ids [200 - OK]
      */
     @PutMapping
-    public ResponseEntity<List<Long>> setOrder(
+    public ResponseEntity<List<Long>> setTurnOrder(
             @RequestBody List<Long> sheetIds,
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
 

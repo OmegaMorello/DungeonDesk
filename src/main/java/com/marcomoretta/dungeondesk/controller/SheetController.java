@@ -37,6 +37,53 @@ public class SheetController {
         this.gameEventStream = gameEventStream;
     }
 
+
+    /**
+     * Requests all sheets summary for main page view
+     *
+     * @param authSession The client active session
+     * @return The sheet list [200 - OK]
+     */
+    @GetMapping("/session")
+    public ResponseEntity<List<SheetSummaryDto>> getSheetsSummary(
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        return ResponseEntity.ok(sheetMapper.toSummaryDtoList(sheetService.getCampaignSheets(authSession)));
+    }
+
+
+    /**
+     * Requests every sheet in the caller library
+     *
+     * @param authSession The client active session
+     * @return The sheet list [200 - OK]
+     */
+    @GetMapping
+    public ResponseEntity<List<SheetDto>> getOwnedSheets(
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
+
+        return ResponseEntity.ok(sheetMapper.toDtoList(sheetService.getOwnedSheets(authSession)));
+    }
+
+
+    /**
+     * Requests a sheet by its id
+     *
+     * @param sheetId     The requested sheet
+     * @param authSession The client active session
+     * @return The sheet [200 - OK]
+     */
+    @GetMapping("/{sheetId}")
+    public ResponseEntity<SheetDto> getSheet(
+            @PathVariable Long sheetId,
+            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        return ResponseEntity.ok(sheetMapper.toDto(sheetService.getSheet(sheetId, authSession)));
+    }
+
+
     /**
      * Requests the creation of a player character sheet
      *
@@ -59,6 +106,7 @@ public class SheetController {
                 .created(URI.create("/api/v1/sheets/" + created.sheetId()))
                 .body(created);
     }
+
 
     /**
      * Requests the creation of an enemy sheet
@@ -85,55 +133,11 @@ public class SheetController {
 
 
     /**
-     * Requests all sheets summary for main page view
-     *
-     * @param authSession The client active session
-     * @return The sheet list [200 - OK]
-     */
-    @GetMapping("/session")
-    public ResponseEntity<List<SheetSummaryDto>> getSheetsSummary(
-            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
-
-        return ResponseEntity.ok(sheetMapper.toSummaryDtoList(sheetService.getCampaignSheets(authSession)));
-    }
-
-
-    /**
-     * Requests a sheet by its id
-     *
-     * @param sheetId     The requested sheet
-     * @param authSession The client active session
-     * @return The sheet [200 - OK]
-     */
-    @GetMapping("/{sheetId}")
-    public ResponseEntity<SheetDto> getSheet(
-            @PathVariable Long sheetId,
-            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
-
-        return ResponseEntity.ok(sheetMapper.toDto(sheetService.getSheet(sheetId, authSession)));
-    }
-
-    /**
-     * Requests every sheet in the caller library
-     *
-     * @param authSession The client active session
-     * @return The sheet list [200 - OK]
-     */
-    @GetMapping
-    public ResponseEntity<List<SheetDto>> getOwnedSheets(
-            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
-
-        authSession.requireMaster();
-
-        return ResponseEntity.ok(sheetMapper.toDtoList(sheetService.getOwnedSheets(authSession)));
-    }
-
-    /**
      * Requests a sheet update by the owner or by the assigned player
      *
-     * @param sheetId     The sheet to update
-     * @param dto         The updated content
-     * @param authSession The client active session
+     * @param sheetId         The sheet to update
+     * @param sheetRequestDto The updated content
+     * @param authSession     The client active session
      * @return The updated sheet [200 - OK]
      */
     @PutMapping("/{sheetId}")
@@ -158,6 +162,7 @@ public class SheetController {
 
         return ResponseEntity.ok(sheetMapper.toDto(sheet));
     }
+
 
     /**
      * Requests a sheet deletion
