@@ -40,30 +40,30 @@ export function updateUser({ username, secret }) {
 // ---- Auth ----------------------------------------------------
 
 // POST /api/v1/auth/register -> { User Created }
-export function register({ username, secret }) {
-  return request("/api/v1/auth/register", {
-    method: "POST",
-    body: JSON.stringify({ username, secret }),
-  });
+export function register({username, secret}) {
+    return request("/api/v1/auth/register", {
+        method: "POST",
+        body: JSON.stringify({username, secret}),
+    });
 }
 
 // POST /api/v1/auth/login -> { auth session }
-export function login({ loginType, username, secret }) {
-  // Creating a data variable to store the session data
-  return request("/api/v1/auth/login", {
-    method: "POST",
-    body: JSON.stringify({ loginType, username, secret }),
-  });
+export function login({loginType, username, secret}) {
+    // Creating a data variable to store the session data
+    return request("/api/v1/auth/login", {
+        method: "POST",
+        body: JSON.stringify({loginType, username, secret}),
+    });
 }
 
 // POST /api/v1/auth/logout -> { no content: ok }
 export function logout() {
-  return request("/api/v1/auth/logout", { method: "POST" });
+    return request("/api/v1/auth/logout", {method: "POST"});
 }
 
 // GET /api/v1/auth/me -> { login type, name, campaign id } | null
 export function getMe() {
-  return request("/api/v1/auth/me");
+    return request("/api/v1/auth/me");
 }
 
 // GET /api/v1/auth/session/players -> [{ id, name }]
@@ -72,5 +72,5 @@ export function getMe() {
 // NOTE: not implemented on the backend yet - the caller treats a failure
 // as "no session available".
 export function getSessionPlayers() {
-  return request("/api/v1/auth/session/players");
+    return request("/api/v1/auth/session/players");
 }
