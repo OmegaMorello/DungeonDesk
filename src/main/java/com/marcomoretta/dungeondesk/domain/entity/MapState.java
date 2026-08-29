@@ -3,6 +3,8 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class MapState {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "campaign_id", nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Campaign campaign;
 

@@ -6,10 +6,12 @@ import com.marcomoretta.dungeondesk.domain.dto.CampaignDto;
 import com.marcomoretta.dungeondesk.domain.dto.CampaignExportDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.RenamePlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.UpdateCampaignRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
+import com.marcomoretta.dungeondesk.domain.request.RenamePlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 import com.marcomoretta.dungeondesk.mapper.CampaignMapper;
 import com.marcomoretta.dungeondesk.service.CampaignService;
@@ -84,7 +86,7 @@ public class CampaignController {
         CampaignDto campaignDto = campaignMapper.toDto(campaign);
 
         return ResponseEntity
-                .created(URI.create("/api/v1/campaigns/" + campaignDto.id()))
+                .created(URI.create("/api/v1/campaigns/" + campaignDto.campaignId()))
                 .body(campaignDto); //TODO: Check warning
     }
 
@@ -144,6 +146,28 @@ public class CampaignController {
         authSession.requireMaster();
         AddPlayerRequest addPlayerRequest = campaignMapper.fromAddPlayerDto(addPlayerRequestDto, campaignId);
         Campaign campaign = campaignService.addPlayer(addPlayerRequest, authSession.userId());
+
+        return ResponseEntity.ok(campaignMapper.toDto(campaign));
+    }
+
+
+    /**
+     * Request to rename an existing player
+     *
+     * @param campaignId             The id of the campaign the player belongs to
+     * @param renamePlayerRequestDto The player details
+     * @param authSession            The active client session
+     * @return The campaign info with the correctly updated players list
+     */
+    @PatchMapping("/{campaignId}/players/{playerId}")
+    public ResponseEntity<CampaignDto> renamePlayer(@PathVariable Long campaignId,
+                                                    @PathVariable Long playerId,
+                                                    @Valid @RequestBody RenamePlayerRequestDto renamePlayerRequestDto,
+                                                    @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
+
+        authSession.requireMaster();
+        RenamePlayerRequest renamePlayerRequest = campaignMapper.fromRenamePlayerDto(renamePlayerRequestDto, campaignId, playerId);
+        Campaign campaign = campaignService.renamePlayer(renamePlayerRequest, authSession.userId());
 
         return ResponseEntity.ok(campaignMapper.toDto(campaign));
     }

@@ -13,6 +13,6 @@ import java.util.Optional;
 @Repository
 public interface MapStateRepository extends JpaRepository<MapState, Long> {
 
-    @EntityGraph(attributePaths = "tokenList")
+    @EntityGraph(attributePaths = {"tokenList", "tokenList.sheet"})
     Optional<MapState> findByCampaign_CampaignId(Long campaignId);
 }

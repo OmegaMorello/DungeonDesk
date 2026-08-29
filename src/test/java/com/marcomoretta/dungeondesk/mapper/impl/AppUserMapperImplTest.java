@@ -42,7 +42,7 @@ class AppUserMapperImplTest {
         AppUserDto appUserDto = appUserMapper.toDto(appUser);
 
         // Assert
-        assertEquals(10L, appUserDto.id());
+        assertEquals(10L, appUserDto.appUserId());
         assertEquals(appUser.getUsername(), appUserDto.username());
 
     }

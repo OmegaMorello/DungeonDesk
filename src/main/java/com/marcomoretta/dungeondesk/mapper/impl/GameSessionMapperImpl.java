@@ -40,6 +40,7 @@ public class GameSessionMapperImpl implements GameSessionMapper {
         return new GameSessionDto(
                 gameSession.getSessionId(),
                 gameSession.getCampaign().getCampaignId(),
+                gameSession.getCampaign().getName(),
                 gameSession.getJoinCode(),
                 gameSession.getStartDate(),
                 gameSession.getEndDate()

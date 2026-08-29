@@ -14,7 +14,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = DiceRolledEvent.class, name = GameEvent.DICE_ROLLED),
         @JsonSubTypes.Type(value = SheetChangedEvent.class, name = GameEvent.SHEET_CHANGED),
         @JsonSubTypes.Type(value = TokenMovedEvent.class, name = GameEvent.TOKEN_MOVED),
-        @JsonSubTypes.Type(value = TurnOrderChangedEvent.class, name = GameEvent.TURN_ORDER_CHANGED)
+        @JsonSubTypes.Type(value = TokenRemovedEvent.class, name = GameEvent.TOKEN_REMOVED),
+        @JsonSubTypes.Type(value = TurnOrderChangedEvent.class, name = GameEvent.TURN_ORDER_CHANGED),
+        @JsonSubTypes.Type(value = MapChangedEvent.class, name = GameEvent.MAP_CHANGED)
 }
 )
 public interface GameEvent {
@@ -22,6 +24,8 @@ public interface GameEvent {
     String DICE_ROLLED = "DICE_ROLLED";
     String SHEET_CHANGED = "SHEET_CHANGED";
     String TOKEN_MOVED = "TOKEN_MOVED";
+    String TOKEN_REMOVED = "TOKEN_REMOVED";
     String TURN_ORDER_CHANGED = "TURN_ORDER_CHANGED";
+    String MAP_CHANGED = "MAP_CHANGED";
 }
 

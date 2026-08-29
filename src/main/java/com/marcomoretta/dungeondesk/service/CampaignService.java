@@ -4,6 +4,7 @@ import com.marcomoretta.dungeondesk.domain.CampaignExport;
 import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
+import com.marcomoretta.dungeondesk.domain.request.RenamePlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 
 import java.util.List;
@@ -67,6 +68,14 @@ public interface CampaignService {
      * @return The campaign with the updated players list
      */
     Campaign addPlayer(AddPlayerRequest request, Long requesterId);
+
+    /**
+     * Renames an existing Player
+     *
+     * @param request The request to rename an existing player
+     * @return The campaign with the updated players list
+     */
+    Campaign renamePlayer(RenamePlayerRequest request, Long requesterId);
 
     /**
      * Removes a player from the campaign players list

@@ -3,6 +3,8 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Token: the pawn associated to a CharSheet
@@ -27,6 +29,7 @@ public class Token {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "map_state_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private MapState mapState;
 
@@ -45,6 +48,7 @@ public class Token {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sheet_id", nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private GenericSheet sheet;
 }

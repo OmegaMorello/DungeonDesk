@@ -27,20 +27,6 @@ public class TurnOrderController {
 
 
     /**
-     * Requests the current order (if any)
-     *
-     * @param authSession The actual session
-     * @return The turn-ordered list of sheet ids [200 - OK]
-     */
-    @GetMapping
-    public ResponseEntity<List<Long>> getTurnOrder(
-            @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession) {
-
-        return ResponseEntity.ok(turnOrderService.getOrder());
-    }
-
-
-    /**
      * Requests a new initiative roll
      *
      * @param authSession The actual session

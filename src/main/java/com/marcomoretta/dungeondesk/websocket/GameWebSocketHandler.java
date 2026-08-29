@@ -106,7 +106,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
             case Command.ROLL_DICE:
                 // Only DM can hide dice rolls
-                boolean hidden = gameCommandRequestDto.hidden() && authSession.loginType().equals(LoginType.MASTER);
+                boolean hidden = Boolean.TRUE.equals(gameCommandRequestDto.hidden()) && authSession.loginType().equals(LoginType.MASTER);
 
                 command = new RollDiceCommand(
                         authSession.displayName(),

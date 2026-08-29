@@ -135,7 +135,7 @@ public class SheetMapperImpl implements SheetMapper {
 
         if (sheet instanceof CharacterSheet) {
             builder
-                    .sheetType(CharacterSheet.class.getSimpleName())
+                    .sheetType("CHARACTER")
                     .playerId(((CharacterSheet) sheet).getPlayer() == null ? null : ((CharacterSheet) sheet).getPlayer().getPlayerId())
                     .characterClass(((CharacterSheet) sheet).getCharacterClass())
                     .species(((CharacterSheet) sheet).getSpecies());
@@ -143,7 +143,7 @@ public class SheetMapperImpl implements SheetMapper {
 
         if (sheet instanceof EnemySheet) {
             builder
-                    .sheetType(EnemySheet.class.getSimpleName());
+                    .sheetType("ENEMY");
         }
 
         return builder.build();

@@ -20,7 +20,7 @@ public class MapStateMapperImpl implements MapStateMapper {
                 mapState.getMapStateId(),
                 mapState.getGridRows(),
                 mapState.getGridColumns(),
-                mapState.getBackgroundUrl() != null,
+                mapState.getBackgroundUrl() != null && !mapState.getBackgroundUrl().isBlank(),
                 toDtoList(mapState.getTokenList()));
     }
 
