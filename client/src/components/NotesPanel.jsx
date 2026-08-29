@@ -6,18 +6,13 @@ import "./NotesPanel.css";
 
 export default function NotesPanel({onClose}) {
     const {user} = useAuth();
-    const {campaignId} = useGame();
+    const {campaignId, sessionId} = useGame();
 
     const [notes, setNotes] = useState([]);
     const [draft, setDraft] = useState({text: "", sharedWithPlayers: false});
     const [scope, setScope] = useState("campaign");
-    const [sessionId, setSessionId] = useState(null);
 
     const isMaster = user.loginType === "MASTER";
-
-    useEffect(() => {
-        api.getActiveSession().then((s) => setSessionId(s.sessionId)).catch(() => setSessionId(null));
-    }, []);
 
     useEffect(() => {
         if (scope === "campaign") {
