@@ -25,11 +25,4 @@ public interface TurnOrderService {
      * @return A list containing the sheets ids turn order
      */
     List<Long> setOrder(List<Long> sheetIds, AuthSession authSession);
-
-    /**
-     * Gets the turn order previously set
-     *
-     * @return A list containing the sheets ids turn order
-     */
-    List<Long> getOrder();
 }

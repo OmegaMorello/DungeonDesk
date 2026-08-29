@@ -48,10 +48,6 @@ public class TurnOrderServiceImpl implements TurnOrderService {
         return sheetIds;
     }
 
-    @Override
-    public List<Long> getOrder() {
-        return gameState.turnOrder();
-    }
 
     // D&D initiative roll, always a D20 (1-20) + the initiative bonus (can be negative)
     private int sheetRoll(GenericSheet sheet) {
