@@ -32,6 +32,7 @@ public class ClientObserver implements Observer<GameEvent> {
 
     @Override
     public void onEvent(GameEvent event) {
+        if (!isVisible(event)) return;
 
         TextMessage textMessage = new TextMessage(jsonMapper.writeValueAsString(event));
         try {
