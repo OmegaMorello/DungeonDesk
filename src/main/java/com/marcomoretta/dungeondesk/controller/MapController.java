@@ -11,7 +11,9 @@ import com.marcomoretta.dungeondesk.domain.dto.request.MoveTokenRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.MapState;
 import com.marcomoretta.dungeondesk.domain.entity.Token;
 import com.marcomoretta.dungeondesk.event.GameEventStream;
+import com.marcomoretta.dungeondesk.event.MapChangedEvent;
 import com.marcomoretta.dungeondesk.event.TokenMovedEvent;
+import com.marcomoretta.dungeondesk.event.TokenRemovedEvent;
 import com.marcomoretta.dungeondesk.mapper.MapStateMapper;
 import com.marcomoretta.dungeondesk.service.MapService;
 import jakarta.validation.Valid;
@@ -74,6 +76,8 @@ public class MapController {
                 createOrResizeMapRequestDto.gridColumns(),
                 authSession
         );
+
+        notifyMapChanged(authSession, false);
 
         return ResponseEntity.ok(mapStateMapper.toDto(mapState));
     }
@@ -153,6 +157,14 @@ public class MapController {
         authSession.requireMaster();
         mapService.deleteToken(tokenId, authSession);
 
+        gameEventStream.notifyObservers(
+                new TokenRemovedEvent(
+                        authSession.displayName(),
+                        tokenId,
+                        Instant.now()
+                )
+        );
+
         return ResponseEntity.noContent().build();
     }
 
@@ -171,6 +183,8 @@ public class MapController {
 
         authSession.requireMaster();
         mapService.storeBackground(mapFile, authSession);
+
+        notifyMapChanged(authSession, true);
 
         return ResponseEntity.noContent().build();
     }
@@ -207,6 +221,21 @@ public class MapController {
                         tokenDto.tokenId(),
                         tokenDto.posX(),
                         tokenDto.posY(),
+                        Instant.now()
+                )
+        );
+    }
+
+    /**
+     * Publish the map changed event to every client
+     *
+     * @param authSession The actual session
+     */
+    private void notifyMapChanged(AuthSession authSession, boolean backgroundChanged) {
+        gameEventStream.notifyObservers(
+                new MapChangedEvent(
+                        authSession.displayName(),
+                        backgroundChanged,
                         Instant.now()
                 )
         );

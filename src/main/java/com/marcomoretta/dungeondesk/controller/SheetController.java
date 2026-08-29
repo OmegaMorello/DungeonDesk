@@ -8,6 +8,7 @@ import com.marcomoretta.dungeondesk.domain.dto.request.SheetRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.GenericSheet;
 import com.marcomoretta.dungeondesk.domain.request.SheetRequest;
 import com.marcomoretta.dungeondesk.event.GameEventStream;
+import com.marcomoretta.dungeondesk.event.MapChangedEvent;
 import com.marcomoretta.dungeondesk.event.SheetChangedEvent;
 import com.marcomoretta.dungeondesk.mapper.SheetMapper;
 import com.marcomoretta.dungeondesk.service.SheetService;
@@ -102,6 +103,10 @@ public class SheetController {
         GenericSheet sheet = sheetService.createCharacterSheet(request, authSession);
         SheetDto created = sheetMapper.toDto(sheet);
 
+        // Notify players to reload the map:
+        // when a sheet is created the players should see it
+        notifyMapChanged(authSession, false);
+
         return ResponseEntity
                 .created(URI.create("/api/v1/sheets/" + created.sheetId()))
                 .body(created);
@@ -180,6 +185,27 @@ public class SheetController {
 
         sheetService.deleteSheet(sheetId, authSession);
 
+        // Notify players to reload the map:
+        // when a sheet is removed its token (if any) disappears from the map
+        notifyMapChanged(authSession, false);
+
         return ResponseEntity.noContent().build();
     }
+
+
+    /**
+     * Publish the map changed event to every client
+     *
+     * @param authSession The actual session
+     */
+    private void notifyMapChanged(AuthSession authSession, boolean backgroundChanged) {
+        gameEventStream.notifyObservers(
+                new MapChangedEvent(
+                        authSession.displayName(),
+                        backgroundChanged,
+                        Instant.now()
+                )
+        );
+    }
+
 }
