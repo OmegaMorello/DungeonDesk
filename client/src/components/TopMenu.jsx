@@ -30,13 +30,14 @@ export default function TopMenu({
                     <button onClick={onEditCampaign}>Edit campaign</button>
                     <button onClick={() => onNewSheet("CHARACTER")}>New character</button>
                     <button onClick={() => onNewSheet("ENEMY")}>New enemy</button>
-                    <button onClick={onNotes}>Notes</button>
                     <button onClick={onJoinCode}>Join code</button>
                     <button onClick={onProfile}>Profile</button>
                     <button onClick={handleCloseSession}>End session</button>
                 </>
             )}
 
+            {/* Open to everyone */}
+            <button onClick={onNotes}>Notes</button>
             <button onClick={logout}>Logout</button>
         </nav>
     );
