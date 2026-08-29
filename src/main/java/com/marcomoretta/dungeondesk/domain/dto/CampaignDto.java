@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Dto to expose fields of Campaign
  *
- * @param id          The id of the campaign
+ * @param campaignId          The id of the campaign
  * @param name        The name of the campaign
  * @param description The description of the campaign
  * @param ownerId     The campaign owner id
@@ -13,7 +13,7 @@ import java.util.List;
  * @param players     The list of players
  */
 public record CampaignDto(
-        Long id,
+        Long campaignId,
         String name,
         String description,
         Long ownerId,
