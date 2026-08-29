@@ -16,6 +16,6 @@ public record GameCommandRequestDto(
         String recipient,
         String text,
         DiceType diceType,
-        boolean hidden
+        Boolean hidden
 ) {
 }
