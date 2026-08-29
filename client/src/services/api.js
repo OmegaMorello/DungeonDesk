@@ -245,10 +245,10 @@ export function updateNote(noteId, note) {
     });
 }
 
-// DELETE /api/v1/ntoes/:id -> [204]
+// DELETE /api/v1/notes/:id -> [204]
 export function deleteNote(noteId) {
     return request(`api/v1/notes/${noteId}`, {
-        method: "POST",
+        method: "DELETE",
     });
 }
 
