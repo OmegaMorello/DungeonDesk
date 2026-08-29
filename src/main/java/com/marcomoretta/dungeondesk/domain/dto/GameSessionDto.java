@@ -16,6 +16,7 @@ import java.time.Instant;
 public record GameSessionDto(
         Long sessionId,
         Long campaignId,
+        String campaignName,
         String joinCode,
         Instant startDate,
         Instant endDate

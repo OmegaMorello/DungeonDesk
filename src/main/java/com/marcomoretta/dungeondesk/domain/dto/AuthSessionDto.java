@@ -8,10 +8,12 @@ import com.marcomoretta.dungeondesk.auth.LoginType;
  * @param loginType   The login type enum
  * @param displayName The name to be displayed at the client side
  * @param campaignId  The actual campaignId for the players only
+ * @param playerId    The player Id
  */
 public record AuthSessionDto(
         LoginType loginType,
         String displayName,
-        Long campaignId
+        Long campaignId,
+        Long playerId
 ) {
 }

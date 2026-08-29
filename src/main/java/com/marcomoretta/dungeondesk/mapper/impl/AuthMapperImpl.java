@@ -15,7 +15,8 @@ public class AuthMapperImpl implements AuthMapper {
         return new AuthSessionDto(
                 authSession.loginType(),
                 authSession.displayName(),
-                authSession.campaignId());
+                authSession.campaignId(),
+                authSession.playerId());
     }
 
 }

@@ -84,7 +84,7 @@ public class CampaignController {
         CampaignDto campaignDto = campaignMapper.toDto(campaign);
 
         return ResponseEntity
-                .created(URI.create("/api/v1/campaigns/" + campaignDto.id()))
+                .created(URI.create("/api/v1/campaigns/" + campaignDto.campaignId()))
                 .body(campaignDto); //TODO: Check warning
     }
 
