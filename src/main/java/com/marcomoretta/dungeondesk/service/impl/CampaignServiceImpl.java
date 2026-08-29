@@ -6,6 +6,7 @@ import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.entity.Player;
 import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
+import com.marcomoretta.dungeondesk.domain.request.RenamePlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 import com.marcomoretta.dungeondesk.exception.*;
 import com.marcomoretta.dungeondesk.repository.CampaignRepository;
@@ -126,6 +127,31 @@ public class CampaignServiceImpl implements CampaignService {
                 .build();
 
         campaign.addPlayer(player);
+
+        return campaignRepository.save(campaign);
+    }
+
+    @Override
+    @Transactional
+    public Campaign renamePlayer(RenamePlayerRequest request, Long requesterId) {
+        Campaign campaign = getCampaign(request.campaignId());
+        checkPermission(campaign, requesterId);
+
+        Player player = campaign.getPlayers().stream()
+                .filter(p -> p.getPlayerId().equals(request.playerId()))
+                .findFirst()
+                .orElseThrow(() -> new PlayerNotFoundException(
+                        "Player not found in this campaign: " + request.playerId()));
+
+        String normalizedName = Player.normalize(request.name());
+
+        boolean playerExists = campaign.getPlayers().stream()
+                .anyMatch(p -> p.getNormalizedName().equals(normalizedName) && !p.getPlayerId().equals(request.playerId()));
+
+        if (playerExists)
+            throw new DuplicatePlayerException("Player name already exists, please choose a different name");
+
+        player.setName(request.name());
 
         return campaignRepository.save(campaign);
     }

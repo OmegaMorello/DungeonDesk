@@ -6,11 +6,13 @@ import com.marcomoretta.dungeondesk.domain.dto.CampaignExportDto;
 import com.marcomoretta.dungeondesk.domain.dto.PlayerDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.AddPlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateCampaignRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.RenamePlayerRequestDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.UpdateCampaignRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.Campaign;
 import com.marcomoretta.dungeondesk.domain.entity.Player;
 import com.marcomoretta.dungeondesk.domain.request.AddPlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.CreateCampaignRequest;
+import com.marcomoretta.dungeondesk.domain.request.RenamePlayerRequest;
 import com.marcomoretta.dungeondesk.domain.request.UpdateCampaignRequest;
 
 import java.util.List;
@@ -43,6 +45,14 @@ public interface CampaignMapper {
      * @return The service layer request
      */
     AddPlayerRequest fromAddPlayerDto(AddPlayerRequestDto dto, Long campaignId);
+
+    /**
+     * Maps a rename player request from a dto
+     *
+     * @param dto Presentation layer request dto
+     * @return The service layer request
+     */
+    RenamePlayerRequest fromRenamePlayerDto(RenamePlayerRequestDto dto, Long campaignId, Long playerId);
 
     /**
      * Maps a campaign to a dto
