@@ -1,0 +1,95 @@
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 20;
+}
+
+.modal {
+    width: 100%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+.modal-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+.modal-body input, .modal-body textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.modal-body button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+.modal-error {
+    color: #c0392b;
+}
+
+.join-addresses h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+}
+
+.join-addresses ul {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.join-addresses li {
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--code-bg);
+    color: var(--text-h);
+    font-family: var(--mono);
+    font-size: 14px;
+    user-select: all;    /* one click selects the whole address, ready to be read out */
+}
+
+.join-addresses small {
+    opacity: 0.7;
+}
