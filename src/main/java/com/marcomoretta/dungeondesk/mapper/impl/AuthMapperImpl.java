@@ -16,7 +16,7 @@ public class AuthMapperImpl implements AuthMapper {
                 authSession.loginType(),
                 authSession.displayName(),
                 authSession.campaignId(),
+                authSession.sessionId(),
                 authSession.playerId());
     }
-
 }

@@ -13,6 +13,7 @@ import java.time.Instant;
  * @param userId      MASTER only userId
  * @param playerId    PLAYER only playerId
  * @param campaignId  PLAYER only campaignId
+ * @param sessionId   PLAYER only sessionId
  * @param displayName The name to be displayed
  * @param createdAt   creation timestamp
  */
@@ -23,6 +24,7 @@ public record AuthSession(
         Long userId,
         Long playerId,
         Long campaignId,
+        Long sessionId,
         String displayName,
         Instant createdAt
 ) {
