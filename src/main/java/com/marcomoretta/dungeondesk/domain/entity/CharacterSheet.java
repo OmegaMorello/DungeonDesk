@@ -3,6 +3,8 @@ package com.marcomoretta.dungeondesk.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Character Sheet: the sheet of a player character
@@ -21,6 +23,7 @@ public class CharacterSheet extends GenericSheet {
     // At most one player
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id", unique = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @ToString.Exclude
     private Player player;
 
@@ -41,9 +44,7 @@ public class CharacterSheet extends GenericSheet {
     private int hitDiceRemaining;
 
     // ---- Death saves, reset as soon as the character is stable or healed ----------
-
     private int deathSaveSuccesses;
-
     private int deathSaveFailures;
 
     // Exhaustion level, from 0 to 6. Six means death
