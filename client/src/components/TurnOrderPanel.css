@@ -1,0 +1,68 @@
+.turn-order {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius);
+    background: var(--card-enemy);
+    color: var(--text-h);
+}
+
+.turn-order-title {
+    font-size: 16px;
+    margin: 0;
+}
+
+.turn-order-empty {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.turn-order ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.turn-order li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.turn-order input {
+    width: 52px;
+    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.turn-order-position {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg);
+    font-size: 13px;
+}
+
+.turn-order-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.turn-order-actions button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
