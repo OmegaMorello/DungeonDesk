@@ -44,7 +44,9 @@ public class CharacterSheet extends GenericSheet {
     private int hitDiceRemaining;
 
     // ---- Death saves, reset as soon as the character is stable or healed ----------
+
     private int deathSaveSuccesses;
+
     private int deathSaveFailures;
 
     // Exhaustion level, from 0 to 6. Six means death
