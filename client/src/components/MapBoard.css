@@ -1,0 +1,27 @@
+/* Width driven: the ratio follows the grid, so the cells are always square */
+.map {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+    aspect-ratio: var(--cols) / var(--rows);
+    width: 100%;
+    border: 4px solid #5b3a29;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-color: #d8d4cd;
+}
+
+.map-cell {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.map-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: auto;
+    width: 100%;
+    min-height: 240px;
+    color: var(--text);
+}

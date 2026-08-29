@@ -1,0 +1,7 @@
+.players-bar {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 14px 6px 8px;
+}

@@ -1,0 +1,48 @@
+.token {
+    position: relative;
+    margin: 8%;
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+    background-size: cover;
+    background-position: center;
+    cursor: grab;
+    box-shadow: var(--shadow);
+    z-index: 1;
+}
+
+/* Not draggable: a player may only move their own pawn */
+.token:not([draggable="true"]) {
+    cursor: default;
+}
+
+.token[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+.token-pc { border-color: #2d6cdf; }
+.token-npc { border-color: #c0392b; }
+
+/* The player's own pawn stands out from the others */
+.token.is-mine {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-border), var(--shadow);
+}
+
+/* The name sits under the circle without changing the cell size */
+.token-name {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 160%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.4;
+    pointer-events: none;
+}

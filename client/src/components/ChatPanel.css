@@ -1,0 +1,90 @@
+.chat-panel {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: var(--radius);
+    background: var(--panel);
+    color: var(--text-h);
+    box-shadow: var(--shadow);
+}
+
+.chat-title {
+    margin: 0;
+    text-align: center;
+}
+
+.chat-channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chat-channels button {
+    padding: 4px 10px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+}
+
+.chat-channels button.is-active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.chat-feed {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.chat-message, .chat-roll {
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.45);
+    text-align: left;
+}
+
+.chat-roll b {
+    font-size: 16px;
+}
+
+.chat-roll.is-hidden-roll {
+    border: 1px dashed var(--accent);
+}
+
+.chat-form {
+    display: flex;
+    gap: 6px;
+}
+
+.chat-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.chat-form button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+}

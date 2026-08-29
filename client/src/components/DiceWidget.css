@@ -1,0 +1,35 @@
+.dice {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius);
+    background: var(--card-enemy);
+}
+
+.dice-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.dice-row button {
+    flex: 1 0 52px;
+    padding: 8px 0;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+.dice-row button:hover {
+    filter: brightness(1.15);
+}
+
+.dice-hidden {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}

@@ -11,10 +11,13 @@ async function request(url, options = {}) {
     });
 
     if (!res.ok) {
+        // Error fallback for a bad response
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `Request failed: ${res.status}`);
     }
-    if (res.status === 204) return null; // logout has no content
+
+    // For responses with no body
+    if (res.status === 204) return null;
     return res.json();
 }
 
@@ -23,19 +26,15 @@ export function getHealth() {
     return request("/api/v1/health");
 }
 
-
-
 // ---- App user --------------------------------------------------
 
 // PUT /api/v1/appusers/update -> AppUserDto
-export function updateUser({ username, secret }) {
+export function updateUser({username, currentSecret, newSecret}) {
     return request("/api/v1/appusers/update", {
         method: "PUT",
-        body: JSON.stringify({ username, secret }),
+        body: JSON.stringify({username, currentSecret, newSecret}),
     });
 }
-
-
 
 // ---- Auth ----------------------------------------------------
 
@@ -75,13 +74,11 @@ export function getSessionPlayers() {
     return request("/api/v1/auth/session/players");
 }
 
-
-
 // ---- Campaigns ----------------------------------------------------
 
 // GET /api/v1/campaigns -> [CampaignDto]
 export function getCampaignList() {
-    return request("api/v1/campaigns");
+    return request("/api/v1/campaigns");
 }
 
 // GET /api/v1/campaigns/:id -> CampaignDto
@@ -90,25 +87,25 @@ export function getCampaign(campaignId) {
 }
 
 // POST /api/v1/campaigns -> CampaignDto [201]
-export function createCampaign(name, description) {
-    return request("api/v1/campaigns", {
+export function createCampaign({name, description}) {
+    return request("/api/v1/campaigns", {
         method: "POST",
-        body: JSON.stringify({ name, description })
+        body: JSON.stringify({name, description}),
     });
 }
 
 // PUT /api/v1/campaigns/:id -> CampaignDto
-export function updateCampaign(campaignId, { name, description }) {
+export function updateCampaign(campaignId, {name, description}) {
     return request(`api/v1/campaigns/${campaignId}`, {
         method: "PUT",
-        body: JSON.stringify({ name, description })
+        body: JSON.stringify({name, description}),
     });
 }
 
 // DELETE /api/v1/campaigns/:id -> [204]
 export function deleteCampaign(campaignId) {
     return request(`api/v1/campaigns/${campaignId}`, {
-        method: "DELETE"
+        method: "DELETE",
     });
 }
 
@@ -116,26 +113,35 @@ export function deleteCampaign(campaignId) {
 export function addPlayer(campaignId, name) {
     return request(`api/v1/campaigns/${campaignId}/players`, {
         method: "POST",
-        body: JSON.stringify({ name })
+        body: JSON.stringify({name}),
+    });
+}
+
+// PATCH /api/v1/campaigns/:id/players/:playerId -> CampaignDto
+export function renamePlayer(campaignId, playerId, name) {
+    return request(`/api/v1/campaigns/${campaignId}/players/${playerId}`, {
+        method: "PATCH",
+        body: JSON.stringify({name}),
     });
 }
 
 // DELETE /api/v1/campaigns/:id/players?playerId=... -> CampaignDto
 export function removePlayer(campaignId, playerId) {
-    return request(`api/v1/campaigns/${campaignId}/players?playerId=${playerId}`, {
-        method: "DELETE"
-    });
+    return request(
+        `api/v1/campaigns/${campaignId}/players?playerId=${playerId}`,
+        {
+            method: "DELETE",
+        },
+    );
 }
-
-
 
 // ---- Game sessions ----------------------------------------------------
 
 // POST /api/v1/campaigns/:id/sessions -> GameSessionDto
-export function createSession(campaignId, { joinCode }) {
+export function createSession(campaignId, {joinCode}) {
     return request(`api/v1/campaigns/${campaignId}/sessions`, {
         method: "POST",
-        body: JSON.stringify(joinCode)
+        body: JSON.stringify({joinCode}),
     });
 }
 
@@ -148,39 +154,37 @@ export function getActiveSession() {
 export function updateSession(sessionId, body) {
     return request(`api/v1/sessions/${sessionId}`, {
         method: "PUT",
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
     });
 }
 
 // PSOT /api/v1/sessions/:id/close -> GameSessionDto
 export function closeSession(sessionId) {
     return request(`api/v1/sessions/${sessionId}/close`, {
-        method: "POST"
+        method: "POST",
     });
 }
-
-
 
 // ---- Map ----------------------------------------------------
 
 // GET /api/v1/map -> MapStateDto
 export function getMap() {
-    return request("api/v1/map");
+    return request("/api/v1/map");
 }
 
 // POST /api/v1/map -> MapStateDto
-export function createOrResizeMap({ campaignId, gridRows, gridColumns }) {
-    return request("api/v1/map", {
+export function createOrResizeMap({campaignId, gridRows, gridColumns}) {
+    return request("/api/v1/map", {
         method: "POST",
-        body: JSON.stringify({ campaignId, gridRows, gridColumns })
+        body: JSON.stringify({campaignId, gridRows, gridColumns}),
     });
 }
 
 // POST /api/v1/map/tokens -> TokenDto [201]
-export function addToken({ sheetId, tokenType, posX, posY }) {
-    return request("api/v1/map/tokens", {
+export function addToken({sheetId, tokenType, posX, posY}) {
+    return request("/api/v1/map/tokens", {
         method: "POST",
-        body: JSON.stringify({ sheetId, tokenType, posX, posY })
+        body: JSON.stringify({sheetId, tokenType, posX, posY}),
     });
 }
 
@@ -188,31 +192,30 @@ export function addToken({ sheetId, tokenType, posX, posY }) {
 export function moveToken(tokenId, posX, posY) {
     return request(`api/v1/map/tokens/${tokenId}`, {
         method: "PUT",
-        body: JSON.stringify({ posX, posY })
+        body: JSON.stringify({posX, posY}),
     });
 }
 
 // DELETE /api/v1/map/tokens/:id -> [204]
 export function deleteToken(tokenId) {
     return request(`api/v1/map/tokens/${tokenId}`, {
-        method: "DELETE"
+        method: "DELETE",
     });
 }
 
 // PUT /api/v1/map/background -> [204]
+// Separated from the request helper used in other functions because the post content is not application/json
 export async function uploadMapBackground(mapFile) {
     const form = new FormData();
     form.append("mapFile", mapFile);
 
     const res = await fetch("/api/v1/map/background", {
         method: "POST",
-        body: form
+        body: form,
     });
 
     if (!res.ok) throw new Error("Upload failed");
 }
-
-
 
 // ---- Notes ----------------------------------------------------
 
@@ -220,7 +223,7 @@ export async function uploadMapBackground(mapFile) {
 export function createNote(campaignId, note) {
     return request(`api/v1/campaigns/${campaignId}/notes`, {
         method: "POST",
-        body: JSON.stringify(note)
+        body: JSON.stringify(note),
     });
 }
 
@@ -230,58 +233,55 @@ export function getCampaignNotes(campaignId) {
 }
 
 // GET /api/v1/sessions/:id/notes -> [NoteDto]
-export function getSessionNotes(campaignId) {
-    return request(`api/v1/sessions/${campaignId}/notes`);
+export function getSessionNotes(sessionId) {
+    return request(`api/v1/sessions/${sessionId}/notes`);
 }
 
 // PUT /api/v1/notes/:id -> NoteDto
 export function updateNote(noteId, note) {
     return request(`api/v1/notes/${noteId}`, {
         method: "PUT",
-        body: JSON.stringify(note)
+        body: JSON.stringify(note),
     });
 }
 
 // DELETE /api/v1/ntoes/:id -> [204]
 export function deleteNote(noteId) {
     return request(`api/v1/notes/${noteId}`, {
-        method: "POST"
+        method: "POST",
     });
 }
-
-
-
 
 // ---- Sheets ----------------------------------------------------
 
 // GET /api/v1/sheets/session -> [SheetSummaryDto]
 export function getSheetsSummary() {
-    return request("api/v1/sheets/session");
+    return request("/api/v1/sheets/session");
 }
 
 // GET /api/v1/sheets -> [SheetDto]
 export function getOwnedSheets() {
-    return request("api/v1/sheets/");
+    return request("/api/v1/sheets");
 }
 
 // GET /api/v1/sheets/:id -> [SheetDto]
 export function getSheet(sheetId) {
-  return request(`api/v1/sheets/${sheetId}`);
+    return request(`api/v1/sheets/${sheetId}`);
 }
 
 // POST /api/v1/sheets/character -> SheetDto [201]
 export function createCharacterSheet(sheetRequest) {
-    return request("api/v1/sheets/characters", {
+    return request("/api/v1/sheets/characters", {
         method: "POST",
-        body: JSON.stringify(sheetRequest)
+        body: JSON.stringify(sheetRequest),
     });
 }
 
 // POST /api/v1/sheets/character -> SheetDto [201]
 export function createEnemySheet(sheetRequest) {
-    return request("api/v1/sheets/enemies", {
+    return request("/api/v1/sheets/enemies", {
         method: "POST",
-        body: JSON.stringify(sheetRequest)
+        body: JSON.stringify(sheetRequest),
     });
 }
 
@@ -289,53 +289,30 @@ export function createEnemySheet(sheetRequest) {
 export function updateSheet(sheetId, sheetRequest) {
     return request(`api/v1/sheets/${sheetId}`, {
         method: "PUT",
-        body: JSON.stringify(sheetRequest)
+        body: JSON.stringify(sheetRequest),
     });
 }
 
 // DELETE /api/v1/sheets/:id -> [204]
 export function deleteSheet(sheetId) {
     return request(`api/v1/sheets/${sheetId}`, {
-        method: "DELETE"
+        method: "DELETE",
     });
 }
 
-
-
 // ---- Turn order ----------------------------------------------------
-
-// GET /api/v1/turn-order -> [sheetId]
-export function getTurnOrder() {
-    return request("api/v1/turn-order");
-}
 
 // POST /api/v1/turn-order/roll -> [sheetId]
 export function rollInitiative() {
-    return request("api/v1/turn-order", {
-        method: "POST"
+    return request("/api/v1/turn-order/roll", {
+        method: "POST",
     });
 }
 
 // PUT /api/v1/turn-order -> [sheetId]
 export function setTurnOrder(sheetIds) {
-    return request("api/v1/turn-order", {
+    return request("/api/v1/turn-order", {
         method: "PUT",
-        body: JSON.stringify(sheetIds)
+        body: JSON.stringify(sheetIds),
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

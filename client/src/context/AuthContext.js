@@ -1,8 +1,5 @@
-// ============================================================
 //  Holds the context object and the useAuth() hook.
-//  Kept separate from the provider so each file exports only
-//  one "kind" of thing (Fast Refresh is happy).
-// ============================================================
+//  Kept separate from the provider so each file exports only one "kind" of thing (Fast Refresh is happy)
 
 import { createContext, useContext } from "react";
 
