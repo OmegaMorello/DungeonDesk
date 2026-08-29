@@ -36,11 +36,6 @@ export function updateUser({username, currentSecret, newSecret}) {
     });
 }
 
-// GET /api/v1/server/addresses -> { hostName, addresses: [...] }
-export function getServerAddresses() {
-    return request("/api/v1/server/addresses");
-}
-
 // ---- Auth ----------------------------------------------------
 
 // POST /api/v1/auth/register -> { User Created }
