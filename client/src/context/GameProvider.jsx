@@ -19,6 +19,7 @@ export function GameProvider({children}) {
     mapRef.current = map;
     const [campaignId, setCampaignId] = useState(null);
     const [campaignName, setCampaignName] = useState("");
+    const [sessionId, setSessionId] = useState(null);
 
     // The roster: the summaries carry the owner id, the name is in the campaign
     const [players, setPlayers] = useState([]);
@@ -112,12 +113,19 @@ export function GameProvider({children}) {
     useEffect(() => {
         if (user.loginType !== "MASTER") {
             setCampaignId(user.campaignId ?? null);
+            setSessionId(user.sessionId ?? null);
             return;
         }
 
         api.getActiveSession()
-            .then((session) => setCampaignId(session.campaignId))
-            .catch(() => setCampaignId(null));
+            .then((session) => {
+                setCampaignId(session.campaignId);
+                setSessionId(session.sessionId);
+            })
+            .catch(() => {
+                setCampaignId(null);
+                setSessionId(null);
+            });
     }, [user]);
 
     // Getting the campaign info
@@ -148,6 +156,7 @@ export function GameProvider({children}) {
         campaignId,
         campaignName,
         setCampaignName,
+        sessionId,
         players,
         setPlayers,
         connected,

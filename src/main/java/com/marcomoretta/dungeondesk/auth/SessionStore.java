@@ -57,15 +57,17 @@ public class SessionStore {
      *
      * @param playerId    The requester player id
      * @param campaignId  The id of the campaign
+     * @param sessionId   The id of the session
      * @param displayName The name to be displayed
      * @return An unfinished auth session, to be completed by the store method
      */
-    public AuthSession createPlayerSession(Long playerId, Long campaignId, String displayName) {
+    public AuthSession createPlayerSession(Long playerId, Long campaignId, Long sessionId, String displayName) {
 
         return store(AuthSession.builder()
                 .loginType(LoginType.PLAYER)
                 .playerId(playerId)
                 .campaignId(campaignId)
+                .sessionId(sessionId)
                 .displayName(displayName)
                 .build());
 
