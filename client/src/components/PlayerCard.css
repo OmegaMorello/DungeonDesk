@@ -1,0 +1,78 @@
+.player-card {
+    position: relative;
+    flex: 0 0 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--text-h);
+    cursor: pointer;
+}
+
+.player-card:hover {
+    filter: brightness(0.97);
+}
+
+/* The player's own character */
+.player-card.is-mine {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.player-owner {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90%;
+    padding: 3px 12px;
+    background: var(--bg);
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-owner.is-mine {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.player-owner.is-free {
+    background: var(--border);
+    color: var(--text-h);
+    border-color: var(--border);
+    box-shadow: none;
+    font-weight: 400;
+}
+
+.player-portrait {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.player-name {
+    font-weight: 600;
+}
+
+.player-class {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.player-hp {
+    font-size: 14px;
+    align-self: flex-start;
+}
