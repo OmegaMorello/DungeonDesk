@@ -74,10 +74,16 @@ public class MapServiceImpl implements MapService {
         mapState.setGridRows(gridRows);
         mapState.setGridColumns(gridColumns);
 
+        for (Token token : mapState.getTokenList()) {
+            token.setPosX(Math.min(token.getPosX(), gridColumns));
+            token.setPosY(Math.min(token.getPosY(), gridRows));
+        }
+
         return mapStateRepository.save(mapState);
     }
 
     @Override
+    @Transactional
     public Token addToken(Long sheetId, TokenType tokenType, int posX, int posY, AuthSession authSession) {
 
         MapState mapState = findMap(authSession);
@@ -85,6 +91,9 @@ public class MapServiceImpl implements MapService {
 
         GenericSheet sheet = sheetRepository.findById(sheetId)
                 .orElseThrow(() -> new SheetNotFoundException("Sheet not found: " + sheetId));
+
+        if (tokenRepository.existsBySheet_SheetId(sheetId))
+            throw new TokenPermissionException("Creature already on the map");
 
         Token token = Token.builder()
                 .sheet(sheet)
