@@ -44,6 +44,21 @@
     text-align: left;
 }
 
+.notes-scope-hint {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.75;
+}
+
+.notes-badge {
+    align-self: flex-start;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 11px;
+}
+
 .notes-actions {
     display: flex;
     gap: 6px;

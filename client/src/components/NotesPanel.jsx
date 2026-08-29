@@ -30,11 +30,17 @@ export default function NotesPanel({onClose}) {
     }, [scope, campaignId, sessionId]);
 
 
+    // The open tab decides the scope
+    const isSessionScope = scope === "session" && sessionId !== null;
+
     async function handleCreate(e) {
         e.preventDefault();
         if (!draft.text.trim()) return;
 
-        const created = await api.createNote(campaignId, draft);
+        const created = await api.createNote(campaignId, {
+            ...draft,
+            sessionId: isSessionScope ? sessionId : null,
+        });
 
         setNotes((prev) => [...prev, created]);
         setDraft({text: "", sharedWithPlayers: false});
@@ -69,9 +75,20 @@ export default function NotesPanel({onClose}) {
                 </button>
             </nav>
 
+            {/* The campaign tab returns the session notes too */}
+            <p className="notes-scope-hint">
+                {scope === "campaign"
+                    ? "Every note of the campaign, tonight's included"
+                    : sessionId
+                        ? "Only the notes taken during this session"
+                        : "No running session: start one to take session notes"}
+            </p>
+
             <ul>
                 {notes.map((note) => (
                     <li key={note.noteId}>
+                        {note.sessionId && <span className="notes-badge">Session</span>}
+
                         <p>{note.text}</p>
 
                         {isMaster && (
@@ -93,7 +110,7 @@ export default function NotesPanel({onClose}) {
                         onChange={(e) =>
                             setDraft((d) =>
                                 ({...d, text: e.target.value}))}
-                        placeholder="New note"
+                        placeholder={isSessionScope ? "New note for this session" : "New note for the campaign"}
                     />
                     <label>
                         <input
