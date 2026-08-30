@@ -10,7 +10,6 @@ import com.marcomoretta.dungeondesk.domain.request.SheetRequest;
 import com.marcomoretta.dungeondesk.exception.PlayerNotFoundException;
 import com.marcomoretta.dungeondesk.exception.SheetNotFoundException;
 import com.marcomoretta.dungeondesk.exception.SheetPermissionException;
-import com.marcomoretta.dungeondesk.repository.CampaignRepository;
 import com.marcomoretta.dungeondesk.repository.PlayerRepository;
 import com.marcomoretta.dungeondesk.repository.SheetRepository;
 import com.marcomoretta.dungeondesk.service.AppUserService;
@@ -31,17 +30,17 @@ public class SheetServiceImpl implements SheetService {
 
     private final SheetRepository sheetRepository;
     private final PlayerRepository playerRepository;
-    private final CampaignRepository campaignRepository;
     private final AppUserService appUserService;
     private final CampaignService campaignService;
     private final GameSessionService gameSessionService;
 
     public SheetServiceImpl(SheetRepository sheetRepository,
-                            PlayerRepository playerRepository, CampaignRepository campaignRepository,
-                            AppUserService appUserService, CampaignService campaignService, GameSessionService gameSessionService) {
+                            PlayerRepository playerRepository,
+                            AppUserService appUserService,
+                            CampaignService campaignService,
+                            GameSessionService gameSessionService) {
         this.sheetRepository = sheetRepository;
         this.playerRepository = playerRepository;
-        this.campaignRepository = campaignRepository;
         this.appUserService = appUserService;
         this.campaignService = campaignService;
         this.gameSessionService = gameSessionService;
@@ -72,8 +71,8 @@ public class SheetServiceImpl implements SheetService {
     public List<GenericSheet> getCampaignSheets(AuthSession session) {
         Long campaignId = session.loginType() == LoginType.MASTER
                 ? gameSessionService.getActiveSession()
-                    .map((gameSession -> gameSession.getCampaign().getCampaignId()))
-                    .orElse(null)
+                .map((gameSession -> gameSession.getCampaign().getCampaignId()))
+                .orElse(null)
                 : session.campaignId();
 
         if (campaignId == null) return List.of();
@@ -168,7 +167,6 @@ public class SheetServiceImpl implements SheetService {
                 && character.getPlayer().getPlayerId().equals(session.playerId());
     }
 
-    //TODO: Understand how to user builder instead
     private void applyCommon(GenericSheet sheet, SheetRequest request, AuthSession session) {
         if (sheet.getOwner() == null) sheet.setOwner(appUserService.getUser(session.userId()));
         if (sheet.getCampaign() == null) sheet.setCampaign(campaignService.getCampaign(request.campaignId()));
@@ -199,7 +197,6 @@ public class SheetServiceImpl implements SheetService {
         sheet.setNotes(request.notes());
     }
 
-    //TODO: Understand how to user builder instead
     private void applyCharacter(CharacterSheet sheet, SheetRequest request, AuthSession session) {
         // Only a master reassigns a sheet: a player editing their own cannot hand it over
         if (session.loginType() == LoginType.MASTER)
@@ -216,7 +213,6 @@ public class SheetServiceImpl implements SheetService {
         sheet.setInspiration(Boolean.TRUE.equals(request.inspiration()));
     }
 
-    //TODO: Understand how to user builder instead
     private void applyEnemy(EnemySheet sheet, SheetRequest request) {
         sheet.setChallengeRating(request.challengeRating());
         sheet.setCreatureType(request.creatureType());
