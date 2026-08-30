@@ -2,8 +2,10 @@ package com.marcomoretta.dungeondesk.mapper.impl;
 
 import com.marcomoretta.dungeondesk.domain.dto.AppUserDto;
 import com.marcomoretta.dungeondesk.domain.dto.request.CreateAppUserRequestDto;
+import com.marcomoretta.dungeondesk.domain.dto.request.UpdateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.domain.request.CreateAppUserRequest;
+import com.marcomoretta.dungeondesk.domain.request.UpdateAppUserRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,18 +17,33 @@ class AppUserMapperImplTest {
     private final AppUserMapperImpl appUserMapper = new AppUserMapperImpl();
 
     @Test
-    void fromDto() {
+    void fromCreateDto() {
         // Arrange
         CreateAppUserRequestDto createAppUserRequestDto =
-                new CreateAppUserRequestDto(
-                        "Test", "Secret");
+                new CreateAppUserRequestDto("Test", "Secret");
+
         // Act
         CreateAppUserRequest createAppUserRequest = appUserMapper.fromCreateDto(createAppUserRequestDto);
 
         // Assert
-        assertEquals(createAppUserRequestDto.username(), createAppUserRequest.username());
-        assertEquals(createAppUserRequestDto.secret(),createAppUserRequest.secret());
+        assertEquals("Test", createAppUserRequest.username());
+        assertEquals("Secret", createAppUserRequest.secret());
+    }
 
+    @Test
+    void fromUpdateDto() {
+        // Arrange
+        UpdateAppUserRequestDto updateAppUserRequestDto =
+                new UpdateAppUserRequestDto("User", "Test", "Secret");
+
+        // Act
+        UpdateAppUserRequest updateAppUserRequest = appUserMapper.fromUpdateDto(updateAppUserRequestDto, 2L);
+
+        // Assert
+        assertEquals("User", updateAppUserRequest.username());
+        assertEquals("Test", updateAppUserRequest.currentSecret());
+        assertEquals("Secret", updateAppUserRequest.newSecret());
+        assertEquals(2, updateAppUserRequest.appUserId());
     }
 
     @Test
@@ -44,7 +61,6 @@ class AppUserMapperImplTest {
         // Assert
         assertEquals(10L, appUserDto.appUserId());
         assertEquals(appUser.getUsername(), appUserDto.username());
-
     }
 
     @Test
@@ -68,8 +84,8 @@ class AppUserMapperImplTest {
 
         // Assert
         assertEquals(2, appUserDtos.size());
-        assertEquals(appUser1.getUsername(), appUserDtos.getFirst().username());
-        assertEquals(appUser2.getUsername(), appUserDtos.getLast().username());
+        assertEquals("User1", appUserDtos.getFirst().username());
+        assertEquals("User2", appUserDtos.getLast().username());
     }
 
     @Test
