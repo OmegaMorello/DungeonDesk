@@ -161,7 +161,7 @@ public class SheetMapperImpl implements SheetMapper {
                 .toList();
     }
 
-    // Converts the spells to a list DTO for easier usage. Includes bonus and damage calculations
+    // Converts the attacks to a list DTO for easier usage. Includes bonus and damage calculations
     private List<AttackDto> toAttackDtoList(GenericSheet sheet) {
         return sheet.getAttacks().stream()
                 .map(a -> new AttackDto(
@@ -195,7 +195,7 @@ public class SheetMapperImpl implements SheetMapper {
         return map;
     }
 
-    // Jackson leaves an absent JSON field null, and the service needs a collection to copy
+    // Jackson leaves an absent JSON field null and the service needs a collection to copy
     private <T> Set<T> orEmpty(Set<T> set) {
         return set == null ? Set.of() : set;
     }

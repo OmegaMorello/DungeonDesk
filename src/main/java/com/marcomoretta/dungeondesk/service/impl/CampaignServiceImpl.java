@@ -95,7 +95,7 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public Campaign updateCampaign(UpdateCampaignRequest request, Long requesterId) {
-        Campaign campaign = getCampaign(request.id());
+        Campaign campaign = getCampaign(request.campaignId());
         checkPermission(campaign, requesterId);
 
         if (!campaign.getName().equals(request.name()))

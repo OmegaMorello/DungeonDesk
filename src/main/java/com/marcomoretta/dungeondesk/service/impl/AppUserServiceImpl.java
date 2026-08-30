@@ -52,7 +52,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Transactional
     public AppUser updateUser(UpdateAppUserRequest request) {
 
-        AppUser user = getUser(request.id());
+        AppUser user = getUser(request.appUserId());
 
         if (!secretHasher.matches(request.currentSecret(), user.getHashSecret()))
             throw new InvalidCredentialsException();

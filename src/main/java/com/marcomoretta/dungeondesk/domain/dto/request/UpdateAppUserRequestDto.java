@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * Dto needed to pass Campaign update fields
+ * Dto needed to pass App User update fields
  *
  * @param username      The updated username
  * @param currentSecret The current secret

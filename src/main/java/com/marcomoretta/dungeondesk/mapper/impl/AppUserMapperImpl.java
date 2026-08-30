@@ -26,9 +26,9 @@ public class AppUserMapperImpl implements AppUserMapper {
     }
 
     @Override
-    public UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto, Long id) {
+    public UpdateAppUserRequest fromUpdateDto(UpdateAppUserRequestDto dto, Long appUserId) {
         return new UpdateAppUserRequest(
-                id,
+                appUserId,
                 dto.username(),
                 dto.currentSecret(),
                 dto.newSecret()

@@ -5,7 +5,6 @@ import com.marcomoretta.dungeondesk.auth.LoginType;
 import com.marcomoretta.dungeondesk.domain.dto.MapImageDto;
 import com.marcomoretta.dungeondesk.domain.entity.*;
 import com.marcomoretta.dungeondesk.exception.*;
-import com.marcomoretta.dungeondesk.repository.CampaignRepository;
 import com.marcomoretta.dungeondesk.repository.MapStateRepository;
 import com.marcomoretta.dungeondesk.repository.SheetRepository;
 import com.marcomoretta.dungeondesk.repository.TokenRepository;
@@ -43,7 +42,7 @@ public class MapServiceImpl implements MapService {
     public MapServiceImpl(MapStateRepository mapStateRepository,
                           TokenRepository tokenRepository,
                           SheetRepository sheetRepository,
-                          CampaignRepository campaignRepository, CampaignService campaignService,
+                          CampaignService campaignService,
                           GameSessionService gameSessionService,
                           @Value("${dungeondesk.map-images-dir}") String imageDirectory) {
         this.mapStateRepository = mapStateRepository;

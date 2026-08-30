@@ -4,6 +4,7 @@ import com.marcomoretta.dungeondesk.domain.entity.Ability;
 import com.marcomoretta.dungeondesk.domain.entity.Skill;
 import com.marcomoretta.dungeondesk.domain.entity.Attack;
 import com.marcomoretta.dungeondesk.domain.entity.SpellSlot;
+import lombok.Builder;
 
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
  * @param sheetId Null when creating
  * @param ownerId The Dungeon Master the sheet belongs to
  */
+@Builder // Builder for testing purposes
 public record SheetRequest(
         Long sheetId,
         Long ownerId,
