@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.Set;
  *
  * @param playerId CHARACTER only, null leaves the sheet unassigned
  */
+@Builder // Builder for testing purposes
 public record SheetRequestDto(
         @NotBlank(message = EMPTY_NAME)
         @Size(max = 255, message = NAME_TOO_LONG)
