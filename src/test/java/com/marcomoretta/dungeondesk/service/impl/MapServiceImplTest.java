@@ -65,6 +65,8 @@ class MapServiceImplTest {
 
     @BeforeEach
     void setup() {
+        // Arrange
+
         // The image directory comes from @Value, so @InjectMocks cannot fill it
         mapService = new MapServiceImpl(mapStateRepository, tokenRepository, sheetRepository,
                 campaignService, gameSessionService, imageDirectory.toString());
