@@ -72,7 +72,7 @@ class SheetMapperImplTest {
 
     @Test
     void toDto_enemySheet() {
-        //Act
+        // Act
         SheetDto sheetDto = sheetMapper.toDto(enemySheet);
 
         // Assert

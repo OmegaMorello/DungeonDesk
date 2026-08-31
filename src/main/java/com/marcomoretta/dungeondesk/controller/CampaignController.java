@@ -87,7 +87,7 @@ public class CampaignController {
 
         return ResponseEntity
                 .created(URI.create("/api/v1/campaigns/" + campaignDto.campaignId()))
-                .body(campaignDto); //TODO: Check warning
+                .body(campaignDto);
     }
 
 
