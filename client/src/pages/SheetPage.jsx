@@ -65,10 +65,18 @@ export default function SheetPage({sheetId, sheetType, onBack}) {
         }
     }
 
+    // Deleting the sheet also deletes the token from the map
     async function handleDelete() {
-        await api.deleteSheet(sheetId);
-        await reloadSheets();
-        onBack();
+        if (!window.confirm(`Delete ${sheet.name}? This cannot be undone.`)) return;
+
+        setError(null);
+        try {
+            await api.deleteSheet(sheetId);
+            await reloadSheets();
+            onBack();
+        } catch (e) {
+            setError(e.message);
+        }
     }
 
 
