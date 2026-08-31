@@ -7,6 +7,7 @@ import com.marcomoretta.dungeondesk.domain.dto.request.UpdateAppUserRequestDto;
 import com.marcomoretta.dungeondesk.domain.entity.AppUser;
 import com.marcomoretta.dungeondesk.mapper.AppUserMapper;
 import com.marcomoretta.dungeondesk.service.AppUserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class AppUserController {
     @PutMapping("/update")
     public ResponseEntity<AppUserDto> updateUser(
             @RequestAttribute(AuthInterceptor.SESSION_ATTRIBUTE) AuthSession authSession,
-            @RequestBody UpdateAppUserRequestDto updateAppUserRequestDto) {
+            @RequestBody @Valid UpdateAppUserRequestDto updateAppUserRequestDto) {
 
         authSession.requireMaster();
         AppUser updatedUser = appUserService.updateUser(appUserMapper.fromUpdateDto(updateAppUserRequestDto, authSession.userId()));
