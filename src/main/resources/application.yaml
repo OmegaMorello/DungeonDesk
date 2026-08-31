@@ -26,11 +26,11 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.stat: DEBUG
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.orm.jdbc.bind: TRACE
+#    org.hibernate.stat: DEBUG
 
 
 
