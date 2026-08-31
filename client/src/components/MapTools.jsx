@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {useGame} from "../context/GameContext.js";
+import {toSheetRequest} from "../services/sheetMapper.js";
 import * as api from "../services/api.js";
 import "./MapTools.css";
 
@@ -9,12 +10,15 @@ function isValidSize(value) {
 }
 
 export default function MapTools() {
-    const {map, setMap, campaignId} = useGame();
+    const {map, setMap, campaignId, sheets, reloadSheets} = useGame();
 
     // Kept as text while typing, will validate later
     const [grid, setGrid] = useState({gridRows: "8", gridColumns: "12"});
 
+    // The whole library of the master
     const [library, setLibrary] = useState([]);
+    const [libraryId, setLibraryId] = useState("");
+
     const [sheetId, setSheetId] = useState("");
     const [tokenType, setTokenType] = useState("NPC");
 
@@ -28,9 +32,14 @@ export default function MapTools() {
     const placed = new Set((map?.tokenList ?? []).map((token) => token.sheetId));
 
     // A playing character pawn stands for a character sheet, a non-playing one for an enemy
-    const creatures = library
+    const creatures = sheets
         .filter((sheet) => tokenType === "PC" ? sheet.sheetType === "CHARACTER" : sheet.sheetType === "ENEMY")
         .filter((sheet) => !placed.has(sheet.sheetId));
+
+    // Enemies of the other campaigns so they can be reused
+    const bestiary = library
+        .filter((sheet) => sheet.sheetType === "ENEMY")
+        .filter((sheet) => !sheets.some((own) => own.sheetId === sheet.sheetId));
 
     async function handleCreateOrResize(e) {
         e.preventDefault();
@@ -85,6 +94,31 @@ export default function MapTools() {
 
             setMap((prev) => ({...prev, tokenList: [...prev.tokenList, token]}));
             setSheetId("");
+        } catch (err) {
+            setError(err.message);
+        }
+    }
+
+    // Can copy an enemy sheet from a different campaign and use it on the current one
+    async function handleAddFromLibrary(e) {
+        e.preventDefault();
+        setError(null);
+
+        try {
+            const original = library.find((sheet) => sheet.sheetId === Number(libraryId));
+            const copy = await api.createEnemySheet(toSheetRequest(original, campaignId));
+
+            await reloadSheets();
+
+            const token = await api.addToken({
+                sheetId: copy.sheetId,
+                tokenType: "NPC",
+                posX: 1,
+                posY: 1,
+            });
+
+            setMap((prev) => ({...prev, tokenList: [...prev.tokenList, token]}));
+            setLibraryId("");
         } catch (err) {
             setError(err.message);
         }
@@ -146,6 +180,28 @@ export default function MapTools() {
 
                         <button type="submit">Add token</button>
                     </form>
+
+                    {bestiary.length > 0 && (
+                        <form className="map-tools-token" onSubmit={handleAddFromLibrary}>
+                            <div className="map-tools-fields">
+                                <span className="map-tools-label">From the bestiary</span>
+
+                                <select
+                                    value={libraryId}
+                                    onChange={(e) =>
+                                        setLibraryId(e.target.value)} required>
+
+                                    <option value="">Choose an enemy</option>
+
+                                    {bestiary.map((sheet) => (
+                                        <option key={sheet.sheetId} value={sheet.sheetId}>{sheet.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <button type="submit">Copy and add</button>
+                        </form>
+                    )}
                 </>
             )}
 

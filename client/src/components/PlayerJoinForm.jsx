@@ -58,7 +58,7 @@ export default function PlayerJoinForm() {
     return (
         <form className="auth-form" onSubmit={handleSubmit}>
             <label className="auth-field">
-                <span>Chi sei</span>
+                <span>Who are you</span>
                 <select
                     name="playerName"
                     value={form.playerName}

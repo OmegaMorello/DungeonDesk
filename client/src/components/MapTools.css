@@ -39,7 +39,6 @@
     cursor: pointer;
 }
 
-/* The two selects stacked, the button beside them and full height */
 .map-tools-token {
     align-items: stretch;
 }
@@ -50,6 +49,11 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+.map-tools-label {
+    font-size: 13px;
+    opacity: 0.8;
 }
 
 .map-tools-upload {
