@@ -86,7 +86,6 @@ export default function SheetPage({sheetId, sheetType, onBack}) {
                 {isMaster && !isNew && <button onClick={handleDelete}>Delete</button>}
             </header>
 
-            {/* A banner, not a full page: the sheet and the back button stay reachable */}
             {error && <p className="sheet-error" role="alert">{error}</p>}
 
             <SheetView sheet={sheet} editing={editing} onChange={setSheet} isMaster={isMaster} players={players}/>

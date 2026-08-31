@@ -144,8 +144,7 @@ export default function SheetView({sheet, editing, onChange, isMaster, players})
                 </>
             ) : (
                 <p className="sheet-hint">
-                    Modifiers, saving throws, skills and attacks are computed by the server:
-                    they appear once the sheet is saved.
+                    Modifiers, saving throws and skills will appear once the sheet is saved.
                 </p>
             )}
 
