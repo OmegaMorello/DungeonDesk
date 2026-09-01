@@ -8,8 +8,7 @@ import java.util.List;
 
 /**
  * Interface that defines the Sheet Service, for both kinds of sheet
- * The methods that differ have distinct signatures, so the type is never inspected
- * Writing is reserved to the owner, a player may only read their own sheet
+ * Writing is reserved to the owner or the player the sheet is assigned to
  */
 public interface SheetService {
 

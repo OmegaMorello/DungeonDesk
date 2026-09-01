@@ -38,7 +38,7 @@ public class GameState {
 
 
     /**
-     * Sets the turn order. Synchronized to avoid being read while being changed
+     * Sets the turn order. Synchronized to avoid being read while changing
      *
      * @param sheetIds The turn-ordered sheet ids list
      */

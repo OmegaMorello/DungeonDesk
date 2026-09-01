@@ -60,7 +60,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
         List<GameEvent> gameEvents = gameState.recentEvents();
         List<Long> turnOrder = gameState.turnOrder();
 
-        // Sends the recent event to allow the client to catch up
+        // Sends the recent event to allow the client to catch up (i.e. a player joins late)
         for (GameEvent gameEvent : gameEvents) clientObserver.onEvent(gameEvent);
 
         // If the turn order was set prior to the client connection, it is sent here to allow the client to catch up
@@ -69,6 +69,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     }
 
 
+    // Invoked when a new WebSocket message arrives
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 

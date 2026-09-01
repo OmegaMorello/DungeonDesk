@@ -1,7 +1,7 @@
 package com.marcomoretta.dungeondesk.auth;
 
 /**
- * Type of login used for authentication phases
+ * Type of login used for authentication
  */
 public enum LoginType {
     MASTER,

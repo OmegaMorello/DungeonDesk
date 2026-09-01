@@ -45,6 +45,7 @@ public class Player {
 
     /**
      * Static method used to normalize a player name in order to maintain uniqueness
+     *
      * @param raw Raw player name
      * @return All lowercase player name
      */

@@ -22,8 +22,8 @@ public class PlayerAuthStrategy implements AuthStrategy {
     }
 
     /**
-     * The player authentication needs to find a game session using the specified secret, which will be a join code
-     * The join code is not hashed, because the Dungeon Masters may change it as they please
+     * The player authentication needs to find the game session using the specified secret, which will be a join code
+     * The join code is not hashed, because the Dungeon Masters can change it and read it out to the players
      *
      * @param username The username
      * @param secret   The raw secret
@@ -32,7 +32,7 @@ public class PlayerAuthStrategy implements AuthStrategy {
     @Override
     public AuthSession authenticate(String username, String secret) {
         GameSession gameSession = gameSessionRepository
-                .findByJoinCodeAndEndDateIsNull(secret)
+                .findByJoinCodeAndEndDateIsNull(secret) // This works because only 1 session can be open at a time
                 .orElseThrow(InvalidCredentialsException::new);
 
         Campaign campaign = gameSession.getCampaign();

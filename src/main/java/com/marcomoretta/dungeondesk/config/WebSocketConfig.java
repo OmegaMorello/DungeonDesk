@@ -25,7 +25,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(gameWebSocketHandler, "/ws")
+        registry.addHandler(gameWebSocketHandler, "/ws") // Adding path for the websocket
                 .addInterceptors(webSocketInterceptor);
     }
 }

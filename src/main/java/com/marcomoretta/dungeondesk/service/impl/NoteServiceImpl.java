@@ -21,10 +21,6 @@ import java.util.List;
 
 /**
  * Serves the Note controller.
- * <p>
- * Writing is reserved to the Dungeon Master who owns the campaign. Reading is allowed
- * to the master on everything and to a player only on the notes flagged as shared,
- * and only within the campaign their session is bound to.
  */
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -134,7 +130,6 @@ public class NoteServiceImpl implements NoteService {
 
     /**
      * Loads a campaign making sure the caller is the master who owns it.
-     * Used by every write path and by the master read paths.
      */
     private Campaign requireOwnedCampaign(Long campaignId, AuthSession session) {
         session.requireMaster();
@@ -148,8 +143,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     /**
-     * A player is bound to the campaign recorded in their session: reading the notes of
-     * any other campaign is refused even if the id is guessed correctly.
+     * A player is bound to the campaign recorded in their session
      */
     private void requireOwnCampaignAsPlayer(Long campaignId, AuthSession session) {
         if (!campaignId.equals(session.campaignId()))
