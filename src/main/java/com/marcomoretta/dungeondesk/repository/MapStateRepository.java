@@ -9,6 +9,7 @@ import java.util.Optional;
 
 /**
  * Map State persistency layer interface
+ * EntityGraphs are used to extract lazy fetch fields
  */
 @Repository
 public interface MapStateRepository extends JpaRepository<MapState, Long> {

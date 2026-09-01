@@ -12,6 +12,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Slf4j
 public class Observable<E> {
+    // Using CopyOnWriteArrayList to prevent errors if an observer is added while an event occurs.
+    // Copying on write keeps the iteration safe without holding a lock while the socket writes
     private final List<Observer<E>> observers = new CopyOnWriteArrayList<>();
 
     /**

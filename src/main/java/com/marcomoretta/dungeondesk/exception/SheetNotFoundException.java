@@ -1,7 +1,7 @@
 package com.marcomoretta.dungeondesk.exception;
 
 /**
- * Thrown when a sheet does not exist
+ * Thrown when the requester tries to get an unknown sheet
  */
 public class SheetNotFoundException extends ResourceNotFoundException {
     public SheetNotFoundException(String message) {

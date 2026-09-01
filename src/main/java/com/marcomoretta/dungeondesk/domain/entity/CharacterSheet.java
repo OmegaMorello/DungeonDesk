@@ -65,12 +65,4 @@ public class CharacterSheet extends GenericSheet {
         return level;
     }
 
-    /**
-     * A character drops at zero hit points and dies after three failed death saves
-     *
-     * @return True when the character is unconscious and rolling death saves
-     */
-    public boolean isUnconscious() {
-        return getCurrentHp() <= 0;
-    }
 }

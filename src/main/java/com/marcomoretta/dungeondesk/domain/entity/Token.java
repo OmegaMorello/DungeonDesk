@@ -7,7 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 /**
- * Token: the pawn associated to a CharSheet
+ * The pawn associated to a CharSheet
  * Can be a Playing Character [PC] or Non-Playing Character [NPC]
  */
 @Entity

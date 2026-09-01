@@ -65,10 +65,18 @@ export default function SheetPage({sheetId, sheetType, onBack}) {
         }
     }
 
+    // Deleting the sheet also deletes the token from the map
     async function handleDelete() {
-        await api.deleteSheet(sheetId);
-        await reloadSheets();
-        onBack();
+        if (!window.confirm(`Delete ${sheet.name}? This cannot be undone.`)) return;
+
+        setError(null);
+        try {
+            await api.deleteSheet(sheetId);
+            await reloadSheets();
+            onBack();
+        } catch (e) {
+            setError(e.message);
+        }
     }
 
 
@@ -86,7 +94,6 @@ export default function SheetPage({sheetId, sheetType, onBack}) {
                 {isMaster && !isNew && <button onClick={handleDelete}>Delete</button>}
             </header>
 
-            {/* A banner, not a full page: the sheet and the back button stay reachable */}
             {error && <p className="sheet-error" role="alert">{error}</p>}
 
             <SheetView sheet={sheet} editing={editing} onChange={setSheet} isMaster={isMaster} players={players}/>

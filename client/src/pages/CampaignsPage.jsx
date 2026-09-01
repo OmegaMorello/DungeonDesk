@@ -1,10 +1,13 @@
 import {useEffect, useState} from "react";
+import {useAuth} from "../context/AuthContext.js";
 import {coverFor} from "../assets/covers";
 import CampaignsDialog from "../components/CampaignsDialog.jsx";
 import * as api from "../services/api.js";
 import "./CampaignsPage.css";
 
 export default function CampaignsPage({onStart}) {
+    const {user, logout} = useAuth();
+
     const [campaigns, setCampaigns] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState(null);
@@ -80,6 +83,11 @@ export default function CampaignsPage({onStart}) {
 
     return (
         <div className="campaigns">
+            <header className="campaigns-bar">
+                <span className="campaigns-user">{user.displayName}</span>
+                <button onClick={logout}>Logout</button>
+            </header>
+
             {activeSession && (
                 <div className="campaigns-open-session" role="alert">
                     <span>There is an open session on {activeSession.campaignName}</span>

@@ -22,6 +22,13 @@ public interface GameSessionService {
     Optional<GameSession> getActiveSession();
 
     /**
+     * Gets the session currently running for a specific owner
+     *
+     * @return The running session, if any
+     */
+    Optional<GameSession> getActiveSessionForOwner(Long requesterId);
+
+    /**
      * Gets the roster of the campaign whose session is running.
      * Used by the public login screen to let a player pick their name.
      *

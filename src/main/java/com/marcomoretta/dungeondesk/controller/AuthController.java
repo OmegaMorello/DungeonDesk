@@ -65,7 +65,7 @@ public class AuthController {
         AppUser appUser = appUserService.createUser(createAppUserRequest);
         AppUserDto appUserDto = appUserMapper.toDto(appUser);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(appUserDto); //TODO: Check warning
+        return ResponseEntity.status(HttpStatus.CREATED).body(appUserDto);
     }
 
     /**
@@ -120,7 +120,6 @@ public class AuthController {
 
     /**
      * Requests the roster of the running session, so a player can pick their name.
-     * TODO: hide the players already connected
      *
      * @return The available names, empty list when no session is running [200 - OK]
      */

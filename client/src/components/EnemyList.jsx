@@ -6,9 +6,11 @@ import "./EnemyList.css";
 export default function EnemyList({enemies, onOpenSheet}) {
     const {reloadSheets, setMap} = useGame();
 
-    // Deleting the sheet takes its pawn away too thanks to the cascade on token.sheet
-    async function handleRemove(sheetId) {
-        await api.deleteSheet(sheetId);
+    // Deleting the sheet also deletes the token from the map
+    async function handleRemove(sheet) {
+        if (!window.confirm(`Delete ${sheet.name}? This cannot be undone.`)) return;
+
+        await api.deleteSheet(sheet.sheetId);
         await reloadSheets();
 
         api.getMap().then(setMap).catch(() => {
@@ -27,7 +29,7 @@ export default function EnemyList({enemies, onOpenSheet}) {
                         <button
                             className="enemy-remove"
                             title="Remove this enemy"
-                            onClick={() => handleRemove(sheet.sheetId)}
+                            onClick={() => handleRemove(sheet)}
                         >
                             ×
                         </button>

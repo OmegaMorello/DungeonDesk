@@ -87,7 +87,7 @@ public class CampaignController {
 
         return ResponseEntity
                 .created(URI.create("/api/v1/campaigns/" + campaignDto.campaignId()))
-                .body(campaignDto); //TODO: Check warning
+                .body(campaignDto);
     }
 
 
@@ -213,7 +213,7 @@ public class CampaignController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"campaign-" + campaignId + ".json\"")
+                        "attachment; filename=\"campaign-" + campaignExportDto.campaignDto().name() + ".json\"")
                 .body(campaignExportDto);
 
     }

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 /**
  * Note persistency layer interface.
+ * EntityGraphs are used to extract lazy fetch fields
  */
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {

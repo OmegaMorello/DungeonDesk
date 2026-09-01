@@ -48,19 +48,19 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional
-    public GenericSheet createCharacterSheet(SheetRequest request, AuthSession session) {
+    public GenericSheet createCharacterSheet(SheetRequest request, AuthSession authSession) {
         CharacterSheet sheet = new CharacterSheet();
-        applyCommon(sheet, request, session);
-        applyCharacter(sheet, request, session);
+        applyCommon(sheet, request, authSession);
+        applyCharacter(sheet, request, authSession);
 
         return sheetRepository.save(sheet);
     }
 
     @Override
     @Transactional
-    public GenericSheet createEnemySheet(SheetRequest request, AuthSession session) {
+    public GenericSheet createEnemySheet(SheetRequest request, AuthSession authSession) {
         EnemySheet sheet = new EnemySheet();
-        applyCommon(sheet, request, session);
+        applyCommon(sheet, request, authSession);
         applyEnemy(sheet, request);
 
         return sheetRepository.save(sheet);
@@ -68,18 +68,18 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenericSheet> getCampaignSheets(AuthSession session) {
-        Long campaignId = session.loginType() == LoginType.MASTER
-                ? gameSessionService.getActiveSession()
+    public List<GenericSheet> getCampaignSheets(AuthSession authSession) {
+        Long campaignId = authSession.loginType() == LoginType.MASTER
+                ? gameSessionService.getActiveSessionForOwner(authSession.userId())
                 .map((gameSession -> gameSession.getCampaign().getCampaignId()))
                 .orElse(null)
-                : session.campaignId();
+                : authSession.campaignId();
 
         if (campaignId == null) return List.of();
 
         List<GenericSheet> sheetList = sheetRepository.findByCampaign_CampaignIdOrderByNameAsc(campaignId);
 
-        if (session.loginType() == LoginType.MASTER) return sheetList;
+        if (authSession.loginType() == LoginType.MASTER) return sheetList;
 
         return sheetList.stream().filter(CharacterSheet.class::isInstance).toList();
 
@@ -87,28 +87,28 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional(readOnly = true)
-    public GenericSheet getSheet(Long sheetId, AuthSession session) {
+    public GenericSheet getSheet(Long sheetId, AuthSession authSession) {
         GenericSheet sheet = findSheet(sheetId);
-        checkCanRead(sheet, session);
+        checkCanRead(sheet, authSession);
         return sheet;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenericSheet> getOwnedSheets(AuthSession session) {
-        return sheetRepository.findByOwner_UserIdOrderByNameAsc(session.userId());
+    public List<GenericSheet> getOwnedSheets(AuthSession authSession) {
+        return sheetRepository.findByOwner_UserIdOrderByNameAsc(authSession.userId());
     }
 
     @Override
     @Transactional
-    public GenericSheet updateSheet(SheetRequest request, AuthSession session) {
+    public GenericSheet updateSheet(SheetRequest request, AuthSession authSession) {
         GenericSheet sheet = findSheet(request.sheetId());
-        checkCanWrite(sheet, session);
+        checkCanWrite(sheet, authSession);
 
-        applyCommon(sheet, request, session);
+        applyCommon(sheet, request, authSession);
 
         // The type is fixed at creation: the concrete class decides which block applies
-        if (sheet instanceof CharacterSheet character) applyCharacter(character, request, session);
+        if (sheet instanceof CharacterSheet character) applyCharacter(character, request, authSession);
         if (sheet instanceof EnemySheet enemy) applyEnemy(enemy, request);
 
         return sheetRepository.save(sheet);
@@ -116,9 +116,9 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional
-    public void deleteSheet(Long sheetId, AuthSession session) {
+    public void deleteSheet(Long sheetId, AuthSession authSession) {
         GenericSheet sheet = findSheet(sheetId);
-        checkIsOwner(sheet, session);
+        checkIsOwner(sheet, authSession);
         sheetRepository.delete(sheet);
     }
 
@@ -129,46 +129,46 @@ public class SheetServiceImpl implements SheetService {
                 .orElseThrow(() -> new SheetNotFoundException("Sheet not found: " + sheetId));
     }
 
-    private void checkIsOwner(GenericSheet sheet, AuthSession session) {
-        if (!sheet.getOwner().getUserId().equals(session.userId()))
+    private void checkIsOwner(GenericSheet sheet, AuthSession authSession) {
+        if (!sheet.getOwner().getUserId().equals(authSession.userId()))
             throw new SheetPermissionException("Only the owner of the sheet can manage it");
     }
 
     // A master reads their own library, a player only the players sheets in its own campaign
-    private void checkCanRead(GenericSheet sheet, AuthSession session) {
-        if (session.loginType() == LoginType.MASTER) {
-            checkIsOwner(sheet, session);
-        } else if (session.loginType() == LoginType.PLAYER && sheet instanceof CharacterSheet characterSheet) {
-            checkIsInSameCampaign(characterSheet, session);
+    private void checkCanRead(GenericSheet sheet, AuthSession authSession) {
+        if (authSession.loginType() == LoginType.MASTER) {
+            checkIsOwner(sheet, authSession);
+        } else if (authSession.loginType() == LoginType.PLAYER && sheet instanceof CharacterSheet characterSheet) {
+            checkIsInSameCampaign(characterSheet, authSession);
         } else throw new SheetPermissionException("You do not have the permission to read this sheet!");
     }
 
     // Checks if the player is in the same campaign of the requested sheet
-    private void checkIsInSameCampaign(CharacterSheet characterSheet, AuthSession session) {
+    private void checkIsInSameCampaign(CharacterSheet characterSheet, AuthSession authSession) {
         if (characterSheet.getPlayer() != null
-                && !characterSheet.getPlayer().getCampaign().getCampaignId().equals(session.campaignId()))
+                && !characterSheet.getPlayer().getCampaign().getCampaignId().equals(authSession.campaignId()))
 
             throw new SheetPermissionException("You cannot read sheets from other campaigns");
     }
 
-    // A player edits their own sheet during play
-    private void checkCanWrite(GenericSheet sheet, AuthSession session) {
-        if (session.loginType() == LoginType.MASTER) {
-            checkIsOwner(sheet, session);
+    // A player can edit their own sheet during play
+    private void checkCanWrite(GenericSheet sheet, AuthSession authSession) {
+        if (authSession.loginType() == LoginType.MASTER) {
+            checkIsOwner(sheet, authSession);
             return;
         }
-        if (!isOwnCharacterSheet(sheet, session))
+        if (!isOwnCharacterSheet(sheet, authSession))
             throw new SheetPermissionException("You can only edit your own character sheet");
     }
 
-    private boolean isOwnCharacterSheet(GenericSheet sheet, AuthSession session) {
+    private boolean isOwnCharacterSheet(GenericSheet sheet, AuthSession authSession) {
         return sheet instanceof CharacterSheet character
                 && character.getPlayer() != null
-                && character.getPlayer().getPlayerId().equals(session.playerId());
+                && character.getPlayer().getPlayerId().equals(authSession.playerId());
     }
 
-    private void applyCommon(GenericSheet sheet, SheetRequest request, AuthSession session) {
-        if (sheet.getOwner() == null) sheet.setOwner(appUserService.getUser(session.userId()));
+    private void applyCommon(GenericSheet sheet, SheetRequest request, AuthSession authSession) {
+        if (sheet.getOwner() == null) sheet.setOwner(appUserService.getUser(authSession.userId()));
         if (sheet.getCampaign() == null) sheet.setCampaign(campaignService.getCampaign(request.campaignId()));
 
         sheet.setName(request.name());
@@ -197,9 +197,9 @@ public class SheetServiceImpl implements SheetService {
         sheet.setNotes(request.notes());
     }
 
-    private void applyCharacter(CharacterSheet sheet, SheetRequest request, AuthSession session) {
-        // Only a master reassigns a sheet: a player editing their own cannot hand it over
-        if (session.loginType() == LoginType.MASTER)
+    private void applyCharacter(CharacterSheet sheet, SheetRequest request, AuthSession authSession) {
+        // Only a master reassigns a sheet
+        if (authSession.loginType() == LoginType.MASTER)
             sheet.setPlayer(resolvePlayer(request.playerId()));
         sheet.setLevel(orZero(request.level()));
         sheet.setCharacterClass(request.characterClass());

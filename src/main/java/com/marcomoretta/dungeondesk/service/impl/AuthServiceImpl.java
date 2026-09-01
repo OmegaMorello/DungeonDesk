@@ -29,14 +29,7 @@ public class AuthServiceImpl implements AuthService {
         this.strategyMap = strategyList.stream().collect(Collectors.toUnmodifiableMap(AuthStrategy::supports, Function.identity()));
     }
 
-    /**
-     * Creates the session if the strategy exists
-     *
-     * @param type Login Type enum
-     * @param username The username
-     * @param secret The raw secret
-     * @return A valid session
-     */
+    // Creates the session if the strategy exists
     @Override
     public AuthSession login(LoginType type, String username, String secret) {
         AuthStrategy strategy = strategyMap.get(type);

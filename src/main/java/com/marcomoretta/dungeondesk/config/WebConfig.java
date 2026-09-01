@@ -16,6 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
     public WebConfig(AuthInterceptor authInterceptor) {
         this.authInterceptor = authInterceptor;
     }
+
+
     /**
      * Add auth interceptors only on specified paths
      * In example, during login and registration phases, the requests do not have to be intercepted since the user is not logged in yet
@@ -24,7 +26,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
+                // Add all endpoints
                 .addPathPatterns("/api/v1/**")
+                // Exclude endpoints that do not need authentication
                 .excludePathPatterns(
                         "/api/v1/auth/login",
                         "/api/v1/auth/register",

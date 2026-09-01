@@ -2,8 +2,6 @@ package com.marcomoretta.dungeondesk.domain.entity;
 
 /**
  * The eighteen skills of D&D 5e, each bound to the ability that governs it.
- * Keeping the association here means the sheet never has to hardcode which ability a
- * skill uses: the modifier is computed at runtime.
  */
 public enum Skill {
 
