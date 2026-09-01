@@ -176,7 +176,7 @@ class SheetServiceImplTest {
     void getCampaignSheets_masterCanSeeEnemies() {
         // Arrange
         GameSession session = GameSession.builder().sessionId(1L).campaign(campaign).build();
-        when(gameSessionService.getActiveSession()).thenReturn(Optional.of(session));
+        when(gameSessionService.getActiveSessionForOwner(OWNER_ID)).thenReturn(Optional.of(session));
         when(sheetRepository.findByCampaign_CampaignIdOrderByNameAsc(CAMPAIGN_ID))
                 .thenReturn(List.of(characterSheet(), enemySheet()));
 
@@ -201,7 +201,7 @@ class SheetServiceImplTest {
     @Test
     void getCampaignSheets_masterWithNoSession() {
         // Arrange
-        when(gameSessionService.getActiveSession()).thenReturn(Optional.empty());
+        when(gameSessionService.getActiveSessionForOwner(OWNER_ID)).thenReturn(Optional.empty());
 
         // Assert
         assertTrue(sheetService.getCampaignSheets(masterSession).isEmpty());

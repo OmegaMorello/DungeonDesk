@@ -252,7 +252,7 @@ class MapServiceImplTest {
     @Test
     void getMap_masterWithNoSession() {
         // Arrange
-        when(gameSessionService.getActiveSession()).thenReturn(Optional.empty());
+        when(gameSessionService.getActiveSessionForOwner(OWNER_ID)).thenReturn(Optional.empty());
 
         // Act - Assert
         assertThrows(MapStateNotFoundException.class, () -> mapService.getMap(masterSession));
@@ -318,7 +318,7 @@ class MapServiceImplTest {
     // ----- HELPERS -----
 
     private void activeSession() {
-        when(gameSessionService.getActiveSession())
+        when(gameSessionService.getActiveSessionForOwner(OWNER_ID))
                 .thenReturn(Optional.of(GameSession.builder()
                         .sessionId(7L).campaign(campaign).build()));
     }

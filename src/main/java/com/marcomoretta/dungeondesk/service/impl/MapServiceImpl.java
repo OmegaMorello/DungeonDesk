@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.Set;
 
 /**
- * Serves the map controller
+ * Serves the Map controller
  */
 @Service
 public class MapServiceImpl implements MapService {
@@ -169,7 +169,7 @@ public class MapServiceImpl implements MapService {
     // If the requester is a DM, the campaign is taken from the session
     private Long getCampaignId(AuthSession authSession) {
         return authSession.loginType() == LoginType.MASTER
-                ? gameSessionService.getActiveSession().map(
+                ? gameSessionService.getActiveSessionForOwner(authSession.userId()).map(
                         gameSession -> gameSession.getCampaign().getCampaignId())
                 .orElseThrow(() -> new MapStateNotFoundException("No map state found"))
                 : authSession.campaignId();

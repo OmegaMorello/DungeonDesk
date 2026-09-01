@@ -40,10 +40,16 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
+    @Transactional
+    public Optional<GameSession> getActiveSessionForOwner(Long requesterId) {
+        return getActiveSession()
+                .filter(session -> session.getCampaign().getOwner().getUserId().equals(requesterId));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Player> getActiveSessionRoster() {
-        // No open session is not an error here: the login screen shows "no session
-        // available" rather than an error banner, so an empty list is ok
+        // Empty list means there is no active session
         return getActiveSession()
                 .map(session -> session.getCampaign().getPlayers())
                 .orElseGet(List::of);
@@ -56,11 +62,10 @@ public class GameSessionServiceImpl implements GameSessionService {
         Campaign campaign = campaignService.getCampaign(request.campaignId());
         checkPermission(campaign, requesterId);
 
-        // Single open session at a time: this is also what lets the join code identify
-        // a session on its own, which keeps the two authentication strategies uniform
+        // Single open session at a time
         getActiveSession().ifPresent(open -> {
             throw new SessionAlreadyOpenException(
-                    "A session is already running: close it before opening a new one");
+                    "Another session is already running on this server");
         });
 
         GameSession gameSession = GameSession.builder()

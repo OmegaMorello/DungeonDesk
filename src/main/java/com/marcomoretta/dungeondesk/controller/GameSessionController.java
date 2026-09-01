@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Class that exposes REST APIs for game sessions management.
- * Every endpoint here is reserved to the Dungeon Master: the responses carry the join
- * code, which is the credential the players use to connect.
+ * Every endpoint here is reserved to the Dungeon Master.
  */
 @RestController
 @RequestMapping("/api/v1")
@@ -57,9 +56,9 @@ public class GameSessionController {
     }
 
     /**
-     * Requests the session currently running
+     * Requests the session currently running for a specific owner
      *
-     * @param authSession The client active session
+     * @param authSession The client own active session
      * @return The running session [200 - OK], or 404 when none is open
      */
     @GetMapping("/sessions/active")
@@ -68,10 +67,9 @@ public class GameSessionController {
 
         authSession.requireMaster();
 
-        // Here the absence IS an error: the master explicitly asked for the running
-        // session. The public login screen uses the roster endpoint instead, where an
-        // empty result is a legitimate answer.
-        GameSession gameSession = gameSessionService.getActiveSession()
+        // The master here needs to receive their actually running session.
+        // If there is a session but the owner is another user, it raises the exception
+        GameSession gameSession = gameSessionService.getActiveSessionForOwner(authSession.userId())
                 .orElseThrow(() -> new GameSessionNotFoundException("No session is currently running"));
 
         return ResponseEntity.ok(gameSessionMapper.toDto(gameSession));
@@ -100,9 +98,7 @@ public class GameSessionController {
     }
 
     /**
-     * Closes a running session.
-     * A POST and not a DELETE: the session is not removed, it is marked as ended and
-     * stays as history for the campaign.
+     * Closes a running session with a POST so it remains as closed in the db
      *
      * @param sessionId   The session to close
      * @param authSession The client active session

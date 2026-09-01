@@ -97,7 +97,7 @@ class GameSessionControllerTest {
     @Test
     void getActiveSession_noOpenSession() {
         // Arrange
-        when(gameSessionService.getActiveSession()).thenReturn(Optional.empty());
+        when(gameSessionService.getActiveSessionForOwner(OWNER_ID)).thenReturn(Optional.empty());
 
         // Act - Assert
         assertThrows(GameSessionNotFoundException.class,
