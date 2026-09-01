@@ -40,5 +40,8 @@ public interface SheetRepository extends JpaRepository<GenericSheet, Long> {
      * @param campaignId The id of the campaign
      * @return The complete list of sheets in the campaign
      */
+    @EntityGraph(attributePaths = {
+            "attacks", "spellSlots",
+            "skillProficiencies", "skillExpertise", "savingThrowProficiencies"})
     List<GenericSheet> findByCampaign_CampaignIdOrderByNameAsc(Long campaignId);
 }
